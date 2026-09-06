@@ -1,0 +1,3043 @@
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #070918;
+}
+
+
+/* =========================================================
+   LOGIN PAGE
+========================================================= */
+
+.login-page {
+  width: 100%;
+  min-height: 100vh;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  padding: 35px 20px 75px;
+
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(183, 78, 255, 0.42),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 12% 80%,
+      rgba(80, 46, 190, 0.28),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #7735be 0%,
+      #502398 44%,
+      #27135b 100%
+    );
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+
+/* =========================================================
+   LOGIN BACKGROUND
+========================================================= */
+
+.login-background {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   BACKGROUND LIGHT
+========================================================= */
+
+.login-orb {
+  position: absolute;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(221, 160, 255, 0.35),
+      rgba(157, 74, 255, 0.08),
+      transparent 72%
+    );
+
+  filter: blur(8px);
+}
+
+.orb-one {
+  width: 320px;
+  height: 320px;
+
+  top: -120px;
+  left: -100px;
+}
+
+.orb-two {
+  width: 230px;
+  height: 230px;
+
+  top: 30px;
+  right: -70px;
+}
+
+.orb-three {
+  width: 340px;
+  height: 340px;
+
+  bottom: -230px;
+  left: 40%;
+}
+
+
+/* =========================================================
+   BACKGROUND MOUNTAINS
+========================================================= */
+
+.mountain {
+  position: absolute;
+
+  bottom: -30px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 170px solid transparent;
+  border-right: 170px solid transparent;
+  border-bottom: 300px solid rgba(29, 12, 70, 0.58);
+}
+
+.mountain-back {
+  left: -150px;
+
+  transform: scale(1.15);
+
+  border-bottom-color:
+    rgba(44, 22, 94, 0.48);
+}
+
+.mountain-middle {
+  left: 18%;
+
+  transform: scale(1.18);
+
+  border-bottom-color:
+    rgba(38, 17, 87, 0.65);
+}
+
+.mountain-front {
+  right: -130px;
+
+  transform: scale(1.4);
+
+  border-bottom-color:
+    rgba(27, 11, 67, 0.74);
+}
+
+
+/* =========================================================
+   BACKGROUND STARS
+========================================================= */
+
+.star {
+  position: absolute;
+
+  z-index: 1;
+
+  color:
+    rgba(255, 255, 255, 0.8);
+
+  font-size: 9px;
+}
+
+.star-one {
+  top: 13%;
+  left: 14%;
+}
+
+.star-two {
+  top: 21%;
+  left: 29%;
+}
+
+.star-three {
+  top: 10%;
+  right: 18%;
+}
+
+.star-four {
+  top: 32%;
+  right: 9%;
+}
+
+.star-five {
+  top: 29%;
+  left: 7%;
+}
+
+.star-six {
+  top: 42%;
+  right: 25%;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.login-card {
+  position: relative;
+
+  z-index: 10;
+
+  width: min(420px, 94vw);
+
+  overflow: hidden;
+
+  border-radius: 4px;
+
+  background:
+    #27394d;
+
+  box-shadow:
+    0 30px 80px
+    rgba(9, 0, 30, 0.52);
+}
+
+
+/* =========================================================
+   LOGIN TOP VISUAL
+========================================================= */
+
+.login-visual {
+  position: relative;
+
+  height: 210px;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 73% 30%,
+      rgba(238, 172, 255, 0.28),
+      transparent 20%
+    ),
+    linear-gradient(
+      180deg,
+      #0b1439 0%,
+      #202265 44%,
+      #51318a 100%
+    );
+}
+
+
+/* =========================================================
+   VISUAL STARS
+========================================================= */
+
+.login-visual::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.7) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    42px 37px;
+
+  opacity: 0.65;
+}
+
+
+/* =========================================================
+   VISUAL MOON
+========================================================= */
+
+.moon {
+  position: absolute;
+
+  width: 60px;
+  height: 60px;
+
+  top: 28px;
+  left: 78px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 28%,
+      #fff7c3,
+      #f6d274 52%,
+      #df9a45 100%
+    );
+
+  box-shadow:
+    0 0 28px
+    rgba(255, 210, 95, 0.38);
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   VISUAL CLOUDS
+========================================================= */
+
+.floating-cloud {
+  position: absolute;
+
+  height: 25px;
+
+  border-radius: 30px;
+
+  background:
+    rgba(174, 206, 231, 0.7);
+
+  z-index: 3;
+}
+
+.cloud-one {
+  width: 125px;
+
+  top: 58px;
+  left: 180px;
+}
+
+.cloud-two {
+  width: 165px;
+
+  top: 95px;
+  left: 25px;
+}
+
+.cloud-three {
+  width: 115px;
+
+  top: 108px;
+  right: -5px;
+}
+
+
+/* =========================================================
+   VISUAL MOUNTAINS
+========================================================= */
+
+.visual-mountain {
+  position: absolute;
+
+  bottom: -8px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 110px solid transparent;
+  border-right: 110px solid transparent;
+  border-bottom: 165px solid #2d246e;
+
+  z-index: 4;
+}
+
+.visual-back {
+  left: -20px;
+
+  transform: scale(0.88);
+
+  border-bottom-color:
+    #36477f;
+}
+
+.visual-middle {
+  left: 105px;
+
+  border-bottom-color:
+    #36216c;
+}
+
+.visual-front {
+  right: -30px;
+
+  transform: scale(1.12);
+
+  border-left-width: 125px;
+  border-right-width: 125px;
+
+  border-bottom:
+    185px solid #1e235e;
+}
+
+
+/* =========================================================
+   VISUAL STARS
+========================================================= */
+
+.visual-star {
+  position: absolute;
+
+  z-index: 8;
+
+  color:
+    rgba(255, 255, 255, 0.83);
+
+  font-size: 11px;
+}
+
+.visual-star-one {
+  top: 19px;
+  right: 88px;
+}
+
+.visual-star-two {
+  top: 73px;
+  right: 152px;
+}
+
+.visual-star-three {
+  top: 126px;
+  left: 161px;
+}
+
+
+/* =========================================================
+   LOGIN ARROW
+========================================================= */
+
+.login-arrow {
+  position: absolute;
+
+  z-index: 20;
+
+  top: 185px;
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    #ffffff;
+
+  color:
+    #182031;
+
+  font-size: 23px;
+
+  font-weight: bold;
+
+  box-shadow:
+    0 5px 18px
+    rgba(0, 0, 0, 0.28);
+}
+
+
+/* =========================================================
+   LOGIN CONTENT
+========================================================= */
+
+.login-content {
+  padding:
+    39px 42px 31px;
+}
+
+
+/* =========================================================
+   LOGIN BRAND
+========================================================= */
+
+.login-brand {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.login-logo {
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #762cff,
+      #c036ff
+    );
+
+  color:
+    #ffffff;
+
+  font-size: 21px;
+
+  font-weight: bold;
+
+  box-shadow:
+    0 8px 22px
+    rgba(155, 48, 255, 0.28);
+}
+
+.login-brand h1 {
+  margin: 0;
+
+  color:
+    #ffffff;
+
+  font-size: 25px;
+
+  font-weight: 600;
+}
+
+.login-brand p {
+  margin:
+    3px 0 0;
+
+  color:
+    #aeb7c7;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   LOGIN DIVIDER
+========================================================= */
+
+.login-divider {
+  width: 100%;
+
+  height: 1px;
+
+  margin-bottom: 22px;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+}
+
+
+/* =========================================================
+   LOGIN HEADING
+========================================================= */
+
+.login-heading {
+  text-align: center;
+
+  margin-bottom: 22px;
+}
+
+.login-heading h2 {
+  margin:
+    0 0 6px;
+
+  color:
+    #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  letter-spacing:
+    1px;
+}
+
+.login-heading p {
+  margin: 0;
+
+  color:
+    #919bad;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   LOGIN ERROR
+========================================================= */
+
+.login-error {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-bottom: 15px;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    rgba(255, 85, 103, 0.30);
+
+  border-radius: 7px;
+
+  background:
+    rgba(255, 66, 85, 0.08);
+}
+
+.login-error span {
+  color:
+    #ff7887;
+
+  font-size: 12px;
+}
+
+.login-error p {
+  margin: 0;
+
+  color:
+    #ff9eaa;
+
+  font-size: 10px;
+
+  line-height:
+    1.5;
+}
+
+
+/* =========================================================
+   LOGIN INPUT GROUP
+========================================================= */
+
+.login-input-group {
+  margin-bottom:
+    15px;
+}
+
+.login-input-group label {
+  display: block;
+
+  margin-bottom:
+    6px;
+
+  color:
+    #98a4b7;
+
+  font-size:
+    8px;
+
+  letter-spacing:
+    1px;
+}
+
+
+/* =========================================================
+   INPUT WRAPPER
+========================================================= */
+
+.login-input-wrapper {
+  position: relative;
+}
+
+
+/* =========================================================
+   LOGIN INPUT
+========================================================= */
+
+.login-input-wrapper input {
+  width: 100%;
+  height: 40px;
+
+  padding:
+    0 14px 0 39px;
+
+  border:
+    1px solid
+    rgba(150, 171, 199, 0.22);
+
+  border-radius:
+    7px;
+
+  outline:
+    none;
+
+  background:
+    rgba(9, 22, 40, 0.55);
+
+  color:
+    #ffffff;
+
+  font-size:
+    11px;
+
+  transition:
+    all 0.2s ease;
+}
+
+.login-input-wrapper input::placeholder {
+  color:
+    #69778b;
+}
+
+.login-input-wrapper input:focus {
+  border-color:
+    #8b5cff;
+
+  background:
+    rgba(15, 29, 48, 0.85);
+
+  box-shadow:
+    0 0 0 2px
+    rgba(139, 92, 255, 0.13);
+}
+
+
+/* =========================================================
+   INPUT ICON
+========================================================= */
+
+.input-icon {
+  position: absolute;
+
+  z-index: 2;
+
+  left: 13px;
+  top: 50%;
+
+  transform:
+    translateY(-50%);
+
+  color:
+    #7ea4db;
+
+  font-size:
+    12px;
+}
+
+
+/* =========================================================
+   LOGIN OPTIONS
+========================================================= */
+
+.login-options {
+  display: flex;
+
+  align-items: center;
+
+  justify-content:
+    space-between;
+
+  gap: 10px;
+
+  margin:
+    5px 0 18px;
+}
+
+.remember-option {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  cursor:
+    pointer;
+
+  color:
+    #8995a7;
+
+  font-size:
+    8px;
+}
+
+.remember-option input {
+  display:
+    none;
+}
+
+.custom-checkbox {
+  width: 12px;
+  height: 12px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid #5ea9ff;
+
+  border-radius:
+    50%;
+
+  color:
+    transparent;
+
+  font-size:
+    7px;
+}
+
+.remember-option
+input:checked
++ .custom-checkbox {
+  background:
+    #4ec7ff;
+
+  color:
+    #15213a;
+}
+
+.forgot-password {
+  border: none;
+
+  background:
+    transparent;
+
+  color:
+    #8793a7;
+
+  font-size:
+    8px;
+
+  cursor:
+    pointer;
+}
+
+.forgot-password:hover {
+  color:
+    #bd91ff;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-button {
+  width: 100%;
+  height: 41px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: none;
+
+  border-radius:
+    21px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #14d9f2,
+      #8c62ff
+    );
+
+  color:
+    #ffffff;
+
+  font-size:
+    10px;
+
+  font-weight:
+    bold;
+
+  letter-spacing:
+    1.2px;
+
+  cursor:
+    pointer;
+
+  box-shadow:
+    0 8px 24px
+    rgba(57, 131, 255, 0.20);
+
+  transition:
+    all 0.2s ease;
+}
+
+.login-button:hover {
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 11px 28px
+    rgba(95, 113, 255, 0.28);
+}
+
+.login-button:active {
+  transform:
+    translateY(0);
+}
+
+.login-button-arrow {
+  font-size:
+    14px;
+}
+
+
+/* =========================================================
+   DEMO ACCOUNT
+========================================================= */
+
+.demo-account {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  margin-top:
+    17px;
+}
+
+.demo-dot {
+  width: 6px;
+  height: 6px;
+
+  border-radius:
+    50%;
+
+  background:
+    #4cdda7;
+
+  box-shadow:
+    0 0 8px
+    rgba(76, 221, 167, 0.6);
+}
+
+.demo-account p {
+  margin: 0;
+
+  color:
+    #788698;
+
+  font-size:
+    8px;
+}
+
+.demo-credentials {
+  margin:
+    6px 0 0;
+
+  text-align:
+    center;
+
+  color:
+    #606c7e;
+
+  font-size:
+    7px;
+}
+
+.demo-credentials strong {
+  color:
+    #8b99ad;
+
+  font-weight:
+    500;
+}
+
+
+/* =========================================================
+   LOGIN FOOTER
+========================================================= */
+
+.login-footer {
+  position:
+    absolute;
+
+  z-index:
+    5;
+
+  bottom:
+    20px;
+
+  left:
+    50%;
+
+  transform:
+    translateX(-50%);
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    7px;
+
+  white-space:
+    nowrap;
+
+  color:
+    rgba(255, 255, 255, 0.65);
+
+  font-size:
+    10px;
+}
+
+.footer-logo {
+  width: 18px;
+  height: 18px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+  justify-content:
+    center;
+
+  border-radius:
+    50%;
+
+  background:
+    rgba(255, 255, 255, 0.15);
+
+  color:
+    #ffffff;
+
+  font-size:
+    9px;
+
+  font-weight:
+    bold;
+}
+
+.footer-separator {
+  opacity:
+    0.5;
+}
+
+
+/* =========================================================
+   MINDCARE FULL-SCREEN DASHBOARD
+========================================================= */
+
+.new-dashboard {
+  width: 100%;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  background:
+    radial-gradient(
+      circle at 78% 8%,
+      rgba(112, 45, 215, 0.18),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 88% 48%,
+      rgba(70, 43, 180, 0.13),
+      transparent 30%
+    ),
+    #070918;
+
+  color:
+    #f4f4f8;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  overflow-x:
+    hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.dashboard-sidebar {
+  width:
+    265px;
+
+  min-width:
+    265px;
+
+  height:
+    100vh;
+
+  min-height:
+    100vh;
+
+  position:
+    fixed;
+
+  top:
+    0;
+
+  left:
+    0;
+
+  background:
+    rgba(3, 7, 24, 0.98);
+
+  border-right:
+    1px solid
+    rgba(130, 130, 170, 0.18);
+
+  padding:
+    32px 18px;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  z-index:
+    100;
+
+  overflow-y:
+    auto;
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+========================================================= */
+
+.sidebar-brand {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    14px;
+
+  padding:
+    0 2px 42px;
+}
+
+.brand-icon {
+  width:
+    60px;
+
+  height:
+    60px;
+
+  flex-shrink:
+    0;
+
+  border-radius:
+    14px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8618ff,
+      #a72cff
+    );
+
+  color:
+    #ffffff;
+
+  font-size:
+    30px;
+
+  font-weight:
+    bold;
+
+  box-shadow:
+    0 10px 30px
+    rgba(133, 24, 255, 0.35);
+}
+
+.brand-text h2 {
+  margin:
+    0;
+
+  font-size:
+    19px;
+
+  color:
+    #ffffff;
+}
+
+.brand-text span {
+  display:
+    block;
+
+  margin-top:
+    4px;
+
+  font-size:
+    12px;
+
+  color:
+    #9294aa;
+}
+
+
+/* =========================================================
+   SIDEBAR NAVIGATION
+========================================================= */
+
+.sidebar-navigation {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    8px;
+}
+
+.sidebar-link {
+  width:
+    100%;
+
+  min-height:
+    50px;
+
+  border:
+    none;
+
+  border-radius:
+    10px;
+
+  background:
+    transparent;
+
+  color:
+    #aaaabd;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    14px;
+
+  padding:
+    0 14px;
+
+  text-align:
+    left;
+
+  font-size:
+    14px;
+
+  font-weight:
+    500;
+
+  cursor:
+    pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background:
+    rgba(131, 36, 239, 0.10);
+
+  color:
+    #ffffff;
+}
+
+.sidebar-link.active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(115, 22, 207, 0.34),
+      rgba(89, 39, 175, 0.18)
+    );
+
+  border:
+    1px solid
+    rgba(139, 47, 255, 0.35);
+
+  color:
+    #e7bcff;
+}
+
+.sidebar-icon {
+  width:
+    23px;
+
+  flex-shrink:
+    0;
+
+  text-align:
+    center;
+
+  font-size:
+    19px;
+}
+
+.sidebar-bottom {
+  margin-top:
+    auto;
+
+  padding-top:
+    25px;
+
+  border-top:
+    1px solid
+    rgba(150, 150, 180, 0.16);
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    6px;
+}
+
+.logout-link:hover {
+  background:
+    rgba(180, 50, 50, 0.10);
+
+  color:
+    #ff8c8c;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.dashboard-main {
+  width:
+    calc(100% - 265px);
+
+  min-height:
+    100vh;
+
+  margin-left:
+    265px;
+
+  padding:
+    34px 40px 55px;
+
+  box-sizing:
+    border-box;
+}
+
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.dashboard-top-header {
+  width:
+    100%;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    25px;
+
+  margin-bottom:
+    28px;
+}
+
+.dashboard-top-header h1 {
+  margin:
+    0;
+
+  font-size:
+    31px;
+
+  font-weight:
+    600;
+
+  color:
+    #f7f7fb;
+}
+
+.dashboard-top-header p {
+  margin:
+    6px 0 0;
+
+  font-size:
+    14px;
+
+  color:
+    #9396aa;
+}
+
+.top-play-button {
+  border:
+    none;
+
+  border-radius:
+    9px;
+
+  padding:
+    13px 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8f18ff,
+      #a12cf2
+    );
+
+  color:
+    #ffffff;
+
+  font-size:
+    13px;
+
+  font-weight:
+    700;
+
+  white-space:
+    nowrap;
+
+  cursor:
+    pointer;
+
+  box-shadow:
+    0 8px 25px
+    rgba(139, 23, 255, 0.32);
+
+  transition:
+    all 0.2s ease;
+}
+
+.top-play-button:hover {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 11px 29px
+    rgba(139, 23, 255, 0.42);
+}
+
+
+/* =========================================================
+   XP / PROFILE CARD
+========================================================= */
+
+.xp-card {
+  width:
+    100%;
+
+  min-height:
+    145px;
+
+  padding:
+    25px 30px;
+
+  border-radius:
+    15px;
+
+  background:
+    linear-gradient(
+      105deg,
+      rgba(73, 20, 119, 0.92),
+      rgba(61, 49, 155, 0.91),
+      rgba(39, 62, 155, 0.92)
+    );
+
+  border:
+    1px solid
+    rgba(165, 68, 255, 0.45);
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    25px;
+
+  margin-bottom:
+    25px;
+
+  box-shadow:
+    0 12px 35px
+    rgba(50, 12, 105, 0.28);
+}
+
+.xp-profile {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    20px;
+
+  min-width:
+    0;
+}
+
+.large-avatar {
+  width:
+    88px;
+
+  height:
+    88px;
+
+  flex-shrink:
+    0;
+
+  border-radius:
+    50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8f0fe8,
+      #6d10cf
+    );
+
+  border:
+    2px solid
+    rgba(255, 255, 255, 0.32);
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  font-size:
+    28px;
+
+  font-weight:
+    600;
+
+  color:
+    #ffffff;
+
+  box-shadow:
+    0 0 30px
+    rgba(156, 31, 255, 0.32);
+}
+
+.xp-information {
+  min-width:
+    0;
+}
+
+.xp-information h2 {
+  margin:
+    0;
+
+  font-size:
+    21px;
+
+  color:
+    #ffffff;
+}
+
+.level-text {
+  margin:
+    5px 0 12px;
+
+  font-size:
+    16px;
+
+  color:
+    #c755ff;
+}
+
+.xp-progress-row {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+}
+
+.xp-progress {
+  width:
+    290px;
+
+  height:
+    9px;
+
+  flex-shrink:
+    1;
+
+  background:
+    rgba(255, 255, 255, 0.18);
+
+  border-radius:
+    20px;
+
+  overflow:
+    hidden;
+}
+
+.xp-progress-fill {
+  height:
+    100%;
+
+  border-radius:
+    inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #c13cff,
+      #4376ff
+    );
+
+  transition:
+    width 0.5s ease;
+}
+
+.xp-progress-row span {
+  font-size:
+    12px;
+
+  color:
+    #c6bfd6;
+
+  white-space:
+    nowrap;
+}
+
+.xp-actions {
+  display:
+    flex;
+
+  gap:
+    12px;
+
+  flex-shrink:
+    0;
+}
+
+.xp-actions button {
+  width:
+    47px;
+
+  height:
+    47px;
+
+  border-radius:
+    10px;
+
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.28);
+
+  background:
+    rgba(255, 255, 255, 0.04);
+
+  color:
+    #ffffff;
+
+  font-size:
+    21px;
+
+  cursor:
+    pointer;
+
+  transition:
+    all 0.2s ease;
+}
+
+.xp-actions button:hover {
+  background:
+    rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.dashboard-stats-grid {
+  width:
+    100%;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap:
+    19px;
+
+  margin-bottom:
+    30px;
+}
+
+.dashboard-stat-card {
+  min-height:
+    165px;
+
+  padding:
+    25px 28px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(17, 22, 43, 0.97),
+      rgba(12, 15, 34, 0.98)
+    );
+
+  border:
+    1px solid
+    rgba(95, 102, 145, 0.25);
+
+  border-radius:
+    16px;
+
+  box-shadow:
+    0 10px 30px
+    rgba(0, 0, 0, 0.18);
+
+  transition:
+    all 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(133, 70, 220, 0.32);
+}
+
+.stat-card-header {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  color:
+    #9da1b5;
+
+  font-size:
+    13px;
+}
+
+.stat-icon {
+  width:
+    42px;
+
+  height:
+    42px;
+
+  flex-shrink:
+    0;
+
+  border-radius:
+    11px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  font-size:
+    19px;
+}
+
+.stat-blue {
+  background:
+    rgba(38, 97, 196, 0.32);
+
+  color:
+    #58a0ff;
+}
+
+.stat-green {
+  background:
+    rgba(17, 150, 101, 0.27);
+
+  color:
+    #22db98;
+}
+
+.stat-yellow {
+  background:
+    rgba(190, 136, 15, 0.30);
+
+  color:
+    #ffc136;
+}
+
+.stat-purple {
+  background:
+    rgba(124, 45, 197, 0.30);
+
+  color:
+    #b46cff;
+}
+
+.dashboard-stat-card > strong {
+  display:
+    block;
+
+  margin-top:
+    24px;
+
+  font-size:
+    32px;
+
+  font-weight:
+    500;
+
+  color:
+    #f5f6fb;
+}
+
+.dashboard-stat-card > p {
+  margin:
+    8px 0 0;
+
+  font-size:
+    11px;
+}
+
+.stat-positive {
+  color:
+    #00e894;
+}
+
+
+/* =========================================================
+   LOWER DASHBOARD GRID
+========================================================= */
+
+.dashboard-lower-grid {
+  width:
+    100%;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    minmax(0, 1.6fr)
+    minmax(360px, 1fr);
+
+  gap:
+    20px;
+
+  margin-bottom:
+    30px;
+}
+
+.trend-card,
+.game-performance-card {
+  width:
+    100%;
+
+  min-width:
+    0;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 19, 39, 0.98),
+      rgba(10, 13, 28, 0.99)
+    );
+
+  border:
+    1px solid
+    rgba(92, 99, 140, 0.25);
+
+  border-radius:
+    16px;
+
+  padding:
+    25px;
+
+  box-sizing:
+    border-box;
+
+  box-shadow:
+    0 10px 30px
+    rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   CARD HEADINGS
+========================================================= */
+
+.dashboard-card-heading {
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-start;
+
+  gap:
+    15px;
+
+  margin-bottom:
+    22px;
+}
+
+.dashboard-card-heading h2 {
+  margin:
+    0;
+
+  font-size:
+    18px;
+
+  font-weight:
+    500;
+
+  color:
+    #f4f4fa;
+}
+
+.dashboard-card-heading p {
+  margin:
+    6px 0 0;
+
+  font-size:
+    12px;
+
+  color:
+    #898da5;
+}
+
+.chart-select {
+  width:
+    125px;
+
+  height:
+    39px;
+
+  padding:
+    0 10px;
+
+  border:
+    1px solid
+    rgba(150, 150, 175, 0.25);
+
+  border-radius:
+    8px;
+
+  background:
+    #11152a;
+
+  color:
+    #dedee8;
+
+  font-size:
+    12px;
+
+  outline:
+    none;
+}
+
+.chart-select option {
+  background:
+    #11152a;
+
+  color:
+    #ffffff;
+}
+
+
+/* =========================================================
+   PERFORMANCE CHART
+========================================================= */
+
+.chart-wrapper {
+  width:
+    100%;
+
+  display:
+    flex;
+
+  height:
+    275px;
+
+  gap:
+    12px;
+}
+
+.chart-y-axis {
+  width:
+    37px;
+
+  flex-shrink:
+    0;
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  justify-content:
+    space-between;
+
+  padding-bottom:
+    25px;
+
+  color:
+    #7d8299;
+
+  font-size:
+    11px;
+
+  text-align:
+    right;
+}
+
+.chart-container {
+  flex:
+    1;
+
+  min-width:
+    0;
+
+  position:
+    relative;
+
+  height:
+    100%;
+
+  border-bottom:
+    1px solid
+    #66697a;
+}
+
+.chart-horizontal {
+  position:
+    absolute;
+
+  left:
+    0;
+
+  right:
+    0;
+
+  border-top:
+    1px dashed
+    rgba(129, 134, 161, 0.23);
+}
+
+.horizontal-100 {
+  top:
+    0;
+}
+
+.horizontal-75 {
+  top:
+    25%;
+}
+
+.horizontal-50 {
+  top:
+    50%;
+}
+
+.horizontal-25 {
+  top:
+    75%;
+}
+
+.performance-svg {
+  position:
+    absolute;
+
+  left:
+    0;
+
+  right:
+    0;
+
+  top:
+    0;
+
+  width:
+    100%;
+
+  height:
+    calc(100% - 25px);
+
+  overflow:
+    visible;
+}
+
+.chart-area-fill {
+  fill:
+    rgba(104, 37, 220, 0.18);
+}
+
+.chart-line-path {
+  fill:
+    none;
+
+  stroke:
+    #9951ff;
+
+  stroke-width:
+    4;
+
+  filter:
+    drop-shadow(
+      0 0 7px
+      rgba(153, 81, 255, 0.75)
+    );
+}
+
+.chart-point-svg {
+  fill:
+    #9951ff;
+
+  stroke:
+    #f4eaff;
+
+  stroke-width:
+    2;
+
+  filter:
+    drop-shadow(
+      0 0 7px
+      rgba(153, 81, 255, 0.85)
+    );
+}
+
+.chart-x-axis {
+  position:
+    absolute;
+
+  left:
+    0;
+
+  right:
+    0;
+
+  bottom:
+    -25px;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  color:
+    #8b8fa3;
+
+  font-size:
+    11px;
+}
+
+
+/* =========================================================
+   GAME PERFORMANCE
+========================================================= */
+
+.game-performance-list {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    12px;
+}
+
+.performance-game-row {
+  min-height:
+    66px;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    rgba(95, 101, 135, 0.12);
+
+  border-radius:
+    12px;
+
+  background:
+    rgba(26, 31, 53, 0.72);
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    12px;
+}
+
+.performance-game-icon {
+  width:
+    42px;
+
+  height:
+    42px;
+
+  flex-shrink:
+    0;
+
+  border-radius:
+    9px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  color:
+    #ffffff;
+
+  font-size:
+    14px;
+
+  font-weight:
+    bold;
+}
+
+.blue-game {
+  background:
+    #2468db;
+
+  color:
+    #ffffff;
+}
+
+.green-game {
+  background:
+    #17a36d;
+
+  color:
+    #ffffff;
+}
+
+.orange-game {
+  background:
+    #d88a12;
+
+  color:
+    #ffffff;
+}
+
+.purple-game {
+  background:
+    #8528e5;
+
+  color:
+    #ffffff;
+}
+
+.performance-game-content {
+  flex:
+    1;
+
+  min-width:
+    0;
+}
+
+.performance-game-title-row {
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  gap:
+    10px;
+
+  margin-bottom:
+    8px;
+}
+
+.performance-game-title-row span {
+  font-size:
+    13px;
+
+  color:
+    #efeff5;
+
+  white-space:
+    nowrap;
+
+  overflow:
+    hidden;
+
+  text-overflow:
+    ellipsis;
+}
+
+.performance-game-title-row strong {
+  font-size:
+    17px;
+
+  color:
+    #c3a0ff;
+}
+
+.game-accuracy-track {
+  height:
+    7px;
+
+  background:
+    #282d45;
+
+  border-radius:
+    20px;
+
+  overflow:
+    hidden;
+}
+
+.game-accuracy-fill {
+  height:
+    100%;
+
+  border-radius:
+    inherit;
+
+  transition:
+    width 0.5s ease;
+}
+
+
+/* =========================================================
+   FOUR GAME BOXES
+========================================================= */
+
+.dashboard-games-section {
+  width:
+    100%;
+
+  margin-top:
+    5px;
+}
+
+.games-section-header {
+  display:
+    flex;
+
+  align-items:
+    flex-end;
+
+  justify-content:
+    space-between;
+
+  gap:
+    20px;
+
+  margin-bottom:
+    18px;
+}
+
+.games-section-header p {
+  margin:
+    0 0 5px;
+
+  color:
+    #7e8298;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  letter-spacing:
+    1.3px;
+}
+
+.games-section-header h2 {
+  margin:
+    0;
+
+  color:
+    #f0f1f6;
+
+  font-size:
+    21px;
+
+  font-weight:
+    500;
+}
+
+.games-section-header button {
+  border:
+    none;
+
+  background:
+    transparent;
+
+  color:
+    #a963ff;
+
+  font-size:
+    12px;
+
+  cursor:
+    pointer;
+
+  white-space:
+    nowrap;
+}
+
+.dashboard-game-boxes {
+  width:
+    100%;
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap:
+    17px;
+}
+
+.dashboard-game-box {
+  min-height:
+    195px;
+
+  padding:
+    20px;
+
+  border-radius:
+    14px;
+
+  border:
+    1px solid
+    rgba(92, 99, 140, 0.25);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(15, 19, 39, 0.98),
+      rgba(10, 13, 29, 0.99)
+    );
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  box-shadow:
+    0 8px 24px
+    rgba(0, 0, 0, 0.16);
+
+  transition:
+    all 0.2s ease;
+}
+
+.dashboard-game-box:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(149, 75, 255, 0.45);
+
+  box-shadow:
+    0 12px 28px
+    rgba(84, 33, 150, 0.20);
+}
+
+.dashboard-game-box-icon {
+  width:
+    43px;
+
+  height:
+    43px;
+
+  border-radius:
+    10px;
+
+  background:
+    #28104f;
+
+  color:
+    #bc77ff;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    center;
+
+  font-size:
+    17px;
+
+  font-weight:
+    700;
+
+  margin-bottom:
+    18px;
+}
+
+.dashboard-game-box h3 {
+  margin:
+    0 0 7px;
+
+  font-size:
+    14px;
+
+  font-weight:
+    500;
+
+  color:
+    #f1f1f6;
+}
+
+.dashboard-game-box p {
+  margin:
+    0;
+
+  color:
+    #82869d;
+
+  font-size:
+    11px;
+}
+
+.dashboard-game-box button {
+  width:
+    100%;
+
+  margin-top:
+    auto;
+
+  height:
+    35px;
+
+  border:
+    none;
+
+  border-radius:
+    8px;
+
+  background:
+    rgba(132, 48, 221, 0.16);
+
+  color:
+    #bd85ff;
+
+  font-size:
+    10px;
+
+  font-weight:
+    700;
+
+  cursor:
+    pointer;
+
+  transition:
+    all 0.2s ease;
+}
+
+.dashboard-game-box button:hover {
+  background:
+    #7e35c9;
+
+  color:
+    #ffffff;
+}
+
+
+/* =========================================================
+   DISCLAIMER
+========================================================= */
+
+.dashboard-disclaimer {
+  margin-top:
+    23px;
+
+  padding:
+    11px 15px;
+
+  border-radius:
+    8px;
+
+  border:
+    1px solid
+    rgba(191, 166, 84, 0.18);
+
+  background:
+    rgba(91, 74, 25, 0.12);
+
+  color:
+    #a89c76;
+
+  font-size:
+    10px;
+
+  line-height:
+    1.5;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .dashboard-sidebar {
+    width:
+      220px;
+
+    min-width:
+      220px;
+  }
+
+  .dashboard-main {
+    width:
+      calc(100% - 220px);
+
+    margin-left:
+      220px;
+
+    padding:
+      28px 25px 45px;
+  }
+
+  .dashboard-stats-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-game-boxes {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-lower-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .xp-progress {
+    width:
+      220px;
+  }
+}
+
+
+/* =========================================================
+   SMALL TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .dashboard-top-header {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .xp-card {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .xp-actions {
+    align-self:
+      flex-end;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .login-page {
+    padding:
+      20px 15px 65px;
+  }
+
+  .new-dashboard {
+    display:
+      block;
+  }
+
+  .dashboard-sidebar {
+    position:
+      static;
+
+    width:
+      100%;
+
+    min-width:
+      100%;
+
+    height:
+      auto;
+
+    min-height:
+      auto;
+
+    padding:
+      15px;
+
+    border-right:
+      none;
+
+    border-bottom:
+      1px solid
+      rgba(130, 130, 170, 0.18);
+  }
+
+  .sidebar-brand {
+    padding-bottom:
+      15px;
+  }
+
+  .sidebar-navigation,
+  .sidebar-bottom {
+    flex-direction:
+      row;
+
+    overflow-x:
+      auto;
+  }
+
+  .sidebar-bottom {
+    margin-top:
+      5px;
+
+    padding-top:
+      5px;
+
+    border-top:
+      none;
+  }
+
+  .sidebar-link {
+    width:
+      auto;
+
+    min-width:
+      max-content;
+
+    white-space:
+      nowrap;
+  }
+
+  .dashboard-main {
+    width:
+      100%;
+
+    margin-left:
+      0;
+
+    padding:
+      25px 15px 40px;
+  }
+
+  .dashboard-top-header {
+    flex-direction:
+      column;
+
+    align-items:
+      flex-start;
+
+    gap:
+      18px;
+  }
+
+  .dashboard-top-header h1 {
+    font-size:
+      26px;
+  }
+
+  .xp-card {
+    flex-direction:
+      column;
+
+    align-items:
+      flex-start;
+
+    gap:
+      20px;
+  }
+
+  .xp-progress-row {
+    flex-direction:
+      column;
+
+    align-items:
+      flex-start;
+  }
+
+  .xp-progress {
+    width:
+      min(290px, 75vw);
+  }
+
+  .xp-actions {
+    display:
+      none;
+  }
+
+  .dashboard-stats-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .dashboard-lower-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .games-section-header {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .dashboard-game-boxes {
+    grid-template-columns:
+      1fr;
+  }
+
+  .chart-select {
+    width:
+      110px;
+  }
+
+  .login-visual {
+    height:
+      180px;
+  }
+
+  .login-arrow {
+    top:
+      155px;
+  }
+
+  .login-content {
+    padding:
+      36px 28px 28px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 500px) {
+
+  .login-page {
+    padding:
+      15px 12px 60px;
+  }
+
+  .login-card {
+    width:
+      100%;
+  }
+
+  .login-visual {
+    height:
+      165px;
+  }
+
+  .login-arrow {
+    top:
+      140px;
+  }
+
+  .login-content {
+    padding:
+      34px 22px 25px;
+  }
+
+  .dashboard-main {
+    padding:
+      20px 12px 35px;
+  }
+
+  .dashboard-top-header h1 {
+    font-size:
+      23px;
+  }
+
+  .dashboard-top-header p {
+    font-size:
+      12px;
+  }
+
+  .large-avatar {
+    width:
+      65px;
+
+    height:
+      65px;
+
+    font-size:
+      22px;
+  }
+
+  .xp-information h2 {
+    font-size:
+      18px;
+  }
+
+  .xp-progress {
+    width:
+      220px;
+  }
+
+  .trend-card,
+  .game-performance-card {
+    padding:
+      18px;
+  }
+
+  .dashboard-card-heading {
+    flex-direction:
+      column;
+
+    gap:
+      12px;
+  }
+
+  .chart-wrapper {
+    height:
+      235px;
+  }
+
+  .login-footer {
+    font-size:
+      8px;
+  }
+}
