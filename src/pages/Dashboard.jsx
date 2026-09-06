@@ -139,6 +139,30 @@ function Dashboard() {
   };
 
 };
+const getLastGame = () => {
+
+  const saved =
+    localStorage.getItem(
+      "lastGameResult"
+    );
+
+  if (!saved) {
+    return null;
+  }
+
+  try {
+
+    return JSON.parse(
+      saved
+    );
+
+  } catch {
+
+    return null;
+
+  }
+
+};
   const [
     lastGame,
     setLastGame
