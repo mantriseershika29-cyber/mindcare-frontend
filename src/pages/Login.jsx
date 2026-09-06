@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -560,7 +561,7 @@ function Login() {
           {/* LOGIN BUTTON */}
           <button
             className="login-button"
-            onClick={handleLogin}
+            onClick={isSignUp ? handleSignUp : handleLogin}
             type="button"
             disabled={loading}
           >
