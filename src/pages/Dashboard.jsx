@@ -579,17 +579,7 @@ function Dashboard() {
             gameType
         );
 
-
-      if (
-        !records.length
-      ) {
-
-        return 0;
-
-      }
-
-
-      const values =
+      const backendValues =
         records
           .map(
             (record) =>
@@ -599,39 +589,59 @@ function Dashboard() {
           )
           .filter(
             (value) =>
-              !Number.isNaN(
-                value
-              )
+              !Number.isNaN(value)
           );
 
-
-      if (
-        !values.length
-      ) {
-
-        return 0;
-
+      if (backendValues.length) {
+        return Math.round(
+          backendValues.reduce(
+            (total, value) => total + value,
+            0
+          ) / backendValues.length
+        );
       }
 
+      let localHistory = [];
+      try {
+        localHistory = JSON.parse(
+          localStorage.getItem("gameHistory") || "[]"
+        );
+      } catch {
+        localHistory = [];
+      }
 
-      const average =
-        values.reduce(
-          (
-            total,
-            value
-          ) =>
-            total + value,
-          0
-        ) /
-        values.length;
+      const localValues =
+        localHistory
+          .filter(
+            (game) =>
+              game?.gameType === gameType ||
+              (gameType === "pattern_recall" &&
+                game?.gameName === "Pattern Recall") ||
+              (gameType === "sequencing" &&
+                game?.gameName === "Sequencing") ||
+              (gameType === "face_name_matching" &&
+                game?.gameName === "Face–Name Matching") ||
+              (gameType === "object_placement" &&
+                game?.gameName === "Object Placement")
+          )
+          .map(
+            (game) => Number(game?.accuracy)
+          )
+          .filter(
+            (value) => !Number.isNaN(value)
+          );
 
+      if (!localValues.length) {
+        return 0;
+      }
 
       return Math.round(
-        average
+        localValues.reduce(
+          (total, value) => total + value,
+          0
+        ) / localValues.length
       );
-
     };
-
 
   /* =====================================================
      GAME INFORMATION
@@ -791,11 +801,7 @@ function Dashboard() {
     ]);
 
 
-  const displayLevel =
-    Math.max(
-      1,
-      backendLevel
-    );
+  const displayLevel = Math.max(1, Math.ceil(Number(localProgress.xp || 0) / XP_PER_LEVEL) || 1);
 
 
   /* =====================================================
@@ -810,7 +816,7 @@ function Dashboard() {
 
 
   const levelStartXP =
-    (localProgress.level - 1) *
+    (displayLevel - 1) *
     XP_PER_LEVEL;
 
 

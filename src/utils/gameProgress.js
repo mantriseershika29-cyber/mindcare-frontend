@@ -178,7 +178,7 @@ export function completeGame({
   const oldXP =
     Number(
       localStorage.getItem(
-        "mindcareXP"
+        "mindCareXP"
       )
     ) || 0;
 
@@ -265,7 +265,7 @@ export function completeGame({
   ===================================================== */
 
   localStorage.setItem(
-    "mindcareXP",
+    "mindCareXP",
     String(newXP)
   );
 
