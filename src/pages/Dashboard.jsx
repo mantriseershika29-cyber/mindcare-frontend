@@ -531,14 +531,20 @@ const getLastGame = () => {
      Backend source of truth.
   ===================================================== */
 
-  const backendGameCount =
+ const backendGameCount =
   backendPerformance.length;
 
-const totalGames =
-  backendProgress?.totalGames !== undefined
-    ? Number(backendProgress.totalGames) || 0
-    : backendGameCount;
+const localSessionCount =
+  Number(localProgress.sessions) || 0;
 
+const totalGames =
+  backendProgress?.totalGames !== undefined &&
+  Number(backendProgress.totalGames) > 0
+    ? Number(backendProgress.totalGames)
+    : Math.max(
+        backendGameCount,
+        localSessionCount
+      );
 
   /* =====================================================
      AVERAGE ACCURACY
@@ -896,12 +902,6 @@ const localTotalScore =
     0
   );
 
-const totalScore =
-  backendPerformance.length > 0
-    ? backendTotalScore
-    : localTotalScore;
-
-
 const backendBestScore =
   backendPerformance.length > 0
     ? Math.max(
@@ -924,10 +924,17 @@ const localBestScore =
     : 0;
 
 
-const bestScore =
+const totalScore =
   backendPerformance.length > 0
-    ? backendBestScore
-    : localBestScore;
+    ? backendTotalScore
+    : localTotalScore;
+
+
+const bestScore =
+  Math.max(
+    backendBestScore,
+    localBestScore
+  );
   /* =====================================================
      LAST SCORE
   ===================================================== */
