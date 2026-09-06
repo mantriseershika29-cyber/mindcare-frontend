@@ -115,14 +115,12 @@ function Dashboard() {
       historyXP
     ),
 
-    level:
-      Number(
-        localStorage.getItem(
-          "mindcareLevel"
-        )
-      ) || 1,
-
-    sessions:
+   level:
+  Number(
+    localStorage.getItem("mindCareLevel") ||
+    localStorage.getItem("mindcareLevel")
+  ) || 1,
+   sessions:
       Number(
         localStorage.getItem(
           "totalSessions"
@@ -533,15 +531,13 @@ const getLastGame = () => {
      Backend source of truth.
   ===================================================== */
 
-  const totalGames =
-    backendProgress &&
-    backendProgress.totalGames !== undefined
+  const backendGameCount =
+  backendPerformance.length;
 
-      ? Number(
-          backendProgress.totalGames
-        ) || 0
-
-      : 0;
+const totalGames =
+  backendProgress?.totalGames !== undefined
+    ? Number(backendProgress.totalGames) || 0
+    : backendGameCount;
 
 
   /* =====================================================
@@ -884,56 +880,54 @@ const displayLevel = Math.max(
 
   }
 
+const backendTotalScore =
+  backendPerformance.reduce(
+    (total, record) =>
+      total +
+      (Number(record?.score) || 0),
+    0
+  );
 
-  /* =====================================================
-     TOTAL SCORE
-  ===================================================== */
+const localTotalScore =
+  gameHistory.reduce(
+    (total, game) =>
+      total +
+      (Number(game?.score) || 0),
+    0
+  );
 
-  const totalScore =
-    gameHistory.reduce(
-
-      (
-        total,
-        game
-      ) => {
-
-        return (
-          total +
-          Number(
-            game.score || 0
-          )
-        );
-
-      },
-
-      0
-
-    );
+const totalScore =
+  backendPerformance.length > 0
+    ? backendTotalScore
+    : localTotalScore;
 
 
-  /* =====================================================
-     BEST SCORE
-  ===================================================== */
-
-  const bestScore =
-    gameHistory.length > 0
-
-      ? Math.max(
-
-          ...gameHistory.map(
-
-            (game) =>
-              Number(
-                game.score || 0
-              )
-
-          )
-
+const backendBestScore =
+  backendPerformance.length > 0
+    ? Math.max(
+        ...backendPerformance.map(
+          (record) =>
+            Number(record?.score) || 0
         )
+      )
+    : 0;
 
-      : 0;
+
+const localBestScore =
+  gameHistory.length > 0
+    ? Math.max(
+        ...gameHistory.map(
+          (game) =>
+            Number(game?.score) || 0
+        )
+      )
+    : 0;
 
 
+const bestScore =
+  backendPerformance.length > 0
+    ? backendBestScore
+    : localBestScore;
   /* =====================================================
      LAST SCORE
   ===================================================== */
@@ -1849,55 +1843,30 @@ const displayLevel = Math.max(
         )}
 
 
-        {/* ==================================================
+      
+                {/* ==================================================
             BACKEND LOAD DETAILS
         ================================================== */}
 
         {!dashboardLoading &&
-          (
-            progressLoading ||
-            performanceLoading
-          ) && (
-
-          <div
-            style={{
-              marginBottom:
-                "20px",
-
-              padding:
-                "10px 14px",
-
-              border:
-                "1px solid rgba(255,255,255,0.06)",
-
-              borderRadius:
-                "9px",
-
-              background:
-                "rgba(255,255,255,0.02)",
-
-              color:
-                "#8f96aa",
-
-              fontSize:
-                "10px",
-
-              textAlign:
-                "center"
-            }}
-          >
-
-            {progressLoading &&
-              performanceLoading
-              ? "Fetching your progress and performance..."
-              : progressLoading
-                ? "Fetching your progress..."
-                : "Loading performance history..."}
-
-          </div>
-
-        )}
-
+          !performanceLoading &&
+          backendPerformance.length === 0 && (
+            <div
+              style={{
+                margin: "12px 0",
+                padding: "9px 12px",
+                border: "1px solid rgba(255,255,255,0.06)",
+                borderRadius: "8px",
+                background: "rgba(255,255,255,0.02)",
+                color: "#777f94",
+                fontSize: "10px",
+                textAlign: "center"
+              }}
+            >
+              No completed games recorded yet.
+            </div>
+          )}
+           
 
         {/* ==================================================
             LAST GAME
