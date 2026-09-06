@@ -36,16 +36,12 @@ function Dashboard() {
   const [
     backendProgress,
     setBackendProgress
-  ] = useState(null);
-
-
-  const [
-    backendPerformance,
-    setBackendPerformance
-  ] = useState([]);
-
-
-  /* =====================================================
+  ] = useState(null)
+const [
+  backendPerformance,
+  setBackendPerformance
+] = useState([]);  
+/* =====================================================
      LOADING
   ===================================================== */
 
@@ -322,22 +318,7 @@ const getLastGame = () => {
       }
 
 
-      /* -----------------------------------------------
-         { performance: [] }
-      ----------------------------------------------- */
-
-      else if (
-        Array.isArray(
-          performanceResponse?.performance
-        )
-      ) {
-
-        records =
-          performanceResponse.performance;
-
-      }
-
-
+     
       /* -----------------------------------------------
          { records: [] }
       ----------------------------------------------- */
@@ -352,6 +333,14 @@ const getLastGame = () => {
           performanceResponse.records;
 
       }
+else if (
+  Array.isArray(
+    performanceResponse?.performances
+  )
+) {
+  records =
+    performanceResponse.performances;
+}
 
 
       /* -----------------------------------------------
