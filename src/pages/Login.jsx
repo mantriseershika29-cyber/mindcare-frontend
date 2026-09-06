@@ -6,6 +6,7 @@ import {
   setPersistence,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 import { auth } from "../firebase";
@@ -17,6 +18,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -192,11 +194,109 @@ function Login() {
   };
 
   // ==========================================
+  // SIGN UP
+  // ==========================================
+  const handleSignUp = async () => {
+    const trimmedEmail = email.trim();
+
+    setError("");
+    setSuccess("");
+
+    if (trimmedEmail === "") {
+      setError("Please enter your email.");
+      return;
+    }
+
+    if (password === "") {
+      setError("Please enter your password.");
+      return;
+    }
+
+    const validEmail =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
+
+    if (!validEmail) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    const validPassword =
+      password.length >= 6 &&
+      /[0-9]/.test(password);
+
+    if (!validPassword) {
+      setError(
+        "Password must contain at least 6 characters and one number."
+      );
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          trimmedEmail,
+          password
+        );
+
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+
+      localStorage.setItem("firebaseIdToken", token);
+      localStorage.setItem("firebaseUserId", user.uid);
+      localStorage.setItem(
+        "firebaseUserEmail",
+        user.email || trimmedEmail
+      );
+      localStorage.setItem(
+        "mindcareUser",
+        user.email || trimmedEmail
+      );
+
+      setError("");
+      setSuccess("Account created successfully. Logging you in...");
+
+      navigate("/dashboard");
+    } catch (firebaseError) {
+      console.error("Firebase signup error:", firebaseError);
+
+      switch (firebaseError.code) {
+        case "auth/email-already-in-use":
+          setError("An account already exists with this email.");
+          break;
+        case "auth/invalid-email":
+          setError("Please enter a valid email address.");
+          break;
+        case "auth/weak-password":
+          setError(
+            "Password must contain at least 6 characters and one number."
+          );
+          break;
+        case "auth/network-request-failed":
+          setError(
+            "Network error. Please check your internet connection."
+          );
+          break;
+        default:
+          setError("Unable to create account. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ==========================================
   // ENTER KEY
   // ==========================================
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && !loading) {
-      handleLogin();
+      if (isSignUp) {
+        handleSignUp();
+      } else {
+        handleLogin();
+      }
     }
   };
 
@@ -350,10 +450,12 @@ function Login() {
 
           {/* LOGIN HEADING */}
           <div className="login-heading">
-            <h2>USER LOGIN</h2>
+            <h2>{isSignUp ? "CREATE ACCOUNT" : "USER LOGIN"}</h2>
 
             <p>
-              Continue your cognitive training journey
+              {isSignUp
+                ? "Create your account and start cognitive training"
+                : "Continue your cognitive training journey"}
             </p>
           </div>
 
@@ -463,12 +565,32 @@ function Login() {
             disabled={loading}
           >
             <span>
-              {loading ? "PLEASE WAIT..." : "LOGIN"}
+              {loading
+                ? "PLEASE WAIT..."
+                : isSignUp
+                  ? "CREATE ACCOUNT"
+                  : "LOGIN"}
             </span>
 
             <span className="login-button-arrow">
               →
             </span>
+          </button>
+
+          <button
+            className="forgot-password"
+            type="button"
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setError("");
+              setSuccess("");
+            }}
+            disabled={loading}
+            style={{ marginTop: "16px", width: "100%" }}
+          >
+            {isSignUp
+              ? "Already have an account? Login"
+              : "New user? Create an account"}
           </button>
 
         </div>
