@@ -847,14 +847,8 @@ const totalXP =
 
 const XP_PER_LEVEL = 500;
 
-const levelStartXP =
-  (displayLevel - 1) * XP_PER_LEVEL;
-
 const currentLevelXP =
-  Math.max(
-    0,
-    totalXP - levelStartXP
-  );
+  totalXP % XP_PER_LEVEL;
 
 const xpPercentage =
   Math.min(
@@ -863,11 +857,7 @@ const xpPercentage =
   );
 
 const xpToNextLevel =
-  Math.max(
-    0,
-    XP_PER_LEVEL - currentLevelXP
-  );
-
+  XP_PER_LEVEL - currentLevelXP;
   /* =====================================================
      TOTAL SCORE
   ===================================================== */
