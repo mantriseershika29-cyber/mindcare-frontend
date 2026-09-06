@@ -1,0 +1,20 @@
+
+.cg-app-page { min-height: 100vh; background: #f4f7f6; color: #243532; }
+.cg-topbar { display:flex; justify-content:space-between; align-items:center; padding:18px 28px; background:#fff; border-bottom:1px solid #dfe8e5; position:sticky; top:0; z-index:10; }
+.cg-logo { font-weight:800; letter-spacing:.06em; color:#24433e; }
+.cg-link-button { border:0; background:transparent; color:#356c62; font-weight:700; cursor:pointer; }
+.cg-dashboard-content { max-width:1100px; margin:0 auto; padding:32px 24px 50px; }
+.cg-welcome { background:#fff; border:1px solid #dfe8e5; border-radius:18px; padding:28px; margin-bottom:20px; }
+.cg-welcome h1 { margin:4px 0 8px; font-size:32px; }
+.cg-section-label { margin:0; font-size:12px; font-weight:800; letter-spacing:.08em; color:#4f8f83; }
+.cg-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin-bottom:24px; }
+.cg-stat-box,.cg-performance-card,.cg-activity-card { background:#fff; border:1px solid #dfe8e5; border-radius:16px; padding:20px; }
+.cg-stat-box p { margin:0 0 8px; font-size:12px; font-weight:800; color:#71817d; }
+.cg-stat-box strong { font-size:28px; }
+.cg-dashboard-section { margin:24px 0; }
+.cg-dashboard-section h2 { font-size:20px; margin:0 0 12px; }
+.cg-performance-card p,.cg-activity-card p { margin:9px 0; }
+.cg-section-heading-row { display:flex; justify-content:space-between; align-items:center; gap:20px; }
+.cg-game-button { border:0; border-radius:10px; padding:12px 18px; background:#4f8f83; color:#fff; font-weight:800; cursor:pointer; }
+@media (max-width:800px) { .cg-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .cg-section-heading-row { align-items:flex-start; flex-direction:column; } }
+@media (max-width:500px) { .cg-stats { grid-template-columns:1fr; } .cg-dashboard-content { padding:20px 14px 40px; } }
