@@ -801,7 +801,12 @@ function Dashboard() {
     ]);
 
 
-  const displayLevel = Math.max(1, Math.ceil(Number(localProgress.xp || 0) / XP_PER_LEVEL) || 1);
+  const XP_PER_LEVEL = 500;
+
+const displayLevel = Math.max(
+  1,
+  Math.ceil(Number(localProgress.xp || 0) / XP_PER_LEVEL) || 1
+);
 
 
   /* =====================================================
@@ -811,9 +816,7 @@ function Dashboard() {
      currently return XP.
   ===================================================== */
 
-  const XP_PER_LEVEL =
-    500;
-
+ 
 
   const levelStartXP =
     (displayLevel - 1) *
