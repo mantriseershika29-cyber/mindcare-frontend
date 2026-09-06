@@ -82,85 +82,63 @@ function Dashboard() {
      recent local UI information.
   ===================================================== */
 
-  const getLocalProgress = () => {
+ const getLocalProgress = () => {
 
-    return {
+  let history = [];
 
-      xp:
-        Number(
-          localStorage.getItem(
-            "mindCareXP"
+  try {
+    history = JSON.parse(
+      localStorage.getItem("gameHistory") || "[]"
+    );
+  } catch {
+    history = [];
+  }
+
+  const storedXP =
+    Number(
+      localStorage.getItem("mindCareXP")
+    ) || 0;
+
+  const historyXP =
+    history.length > 0
+      ? Math.max(
+          ...history.map(
+            (game) => Number(game?.totalXP) || 0
           )
-        ) || 0,
+        )
+      : 0;
 
-      level:
-        Number(
-          localStorage.getItem(
-            "mindcareLevel"
-          )
-        ) || 1,
+  return {
 
-      sessions:
-        Number(
-          localStorage.getItem(
-            "totalSessions"
-          )
-        ) || 0,
+    xp: Math.max(
+      storedXP,
+      historyXP
+    ),
 
-      gamesCompleted:
-        Number(
-          localStorage.getItem(
-            "gamesCompleted"
-          )
-        ) || 0
+    level:
+      Number(
+        localStorage.getItem(
+          "mindcareLevel"
+        )
+      ) || 1,
 
-    };
+    sessions:
+      Number(
+        localStorage.getItem(
+          "totalSessions"
+        )
+      ) || 0,
+
+    gamesCompleted:
+      Number(
+        localStorage.getItem(
+          "gamesCompleted"
+        )
+      ) || 0
 
   };
 
-
-  const [
-    localProgress,
-    setLocalProgress
-  ] = useState(
-    getLocalProgress
-  );
-
-
-  /* =====================================================
-     LAST GAME
-  ===================================================== */
-
-  const getLastGame = () => {
-
-    const saved =
-      localStorage.getItem(
-        "lastGameResult"
-      );
-
-
-    if (!saved) {
-
-      return null;
-
-    }
-
-
-    try {
-
-      return JSON.parse(
-        saved
-      );
-
-    } catch {
-
-      return null;
-
-    }
-
-  };
-
-
+};
   const [
     lastGame,
     setLastGame
