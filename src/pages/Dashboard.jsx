@@ -139,6 +139,12 @@ function Dashboard() {
   };
 
 };
+const [
+  localProgress,
+  setLocalProgress
+] = useState(
+  getLocalProgress
+);
 const getLastGame = () => {
 
   const saved =
