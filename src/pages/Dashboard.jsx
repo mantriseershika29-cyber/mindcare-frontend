@@ -565,83 +565,45 @@ const totalGames =
      
      Derived from backend performance.
   ===================================================== */
+const getGameAccuracy = (gameType) => {
+  const playedCount =
+    Number(
+      backendProgress?.gameTypeBreakdown?.[gameType]
+    ) || 0;
 
-  const getGameAccuracy =
-    (
-      gameType
-    ) => {
+  // If this game has never been played, show 0 / "Not played"
+  if (playedCount === 0) {
+    return 0;
+  }
 
-      const records =
-        backendPerformance.filter(
-          (record) =>
-            record?.gameType ===
-            gameType
-        );
+  const records =
+    backendPerformance.filter(
+      (record) =>
+        record?.gameType === gameType
+    );
 
-      const backendValues =
-        records
-          .map(
-            (record) =>
-              Number(
-                record?.accuracy
-              )
-          )
-          .filter(
-            (value) =>
-              !Number.isNaN(value)
-          );
-
-      if (backendValues.length) {
-        return Math.round(
-          backendValues.reduce(
-            (total, value) => total + value,
-            0
-          ) / backendValues.length
-        );
-      }
-
-      let localHistory = [];
-      try {
-        localHistory = JSON.parse(
-          localStorage.getItem("gameHistory") || "[]"
-        );
-      } catch {
-        localHistory = [];
-      }
-
-      const localValues =
-        localHistory
-          .filter(
-            (game) =>
-              game?.gameType === gameType ||
-              (gameType === "pattern_recall" &&
-                game?.gameName === "Pattern Recall") ||
-              (gameType === "sequencing" &&
-                game?.gameName === "Sequencing") ||
-              (gameType === "face_name_matching" &&
-                game?.gameName === "Face–Name Matching") ||
-              (gameType === "object_placement" &&
-                game?.gameName === "Object Placement")
-          )
-          .map(
-            (game) => Number(game?.accuracy)
-          )
-          .filter(
-            (value) => !Number.isNaN(value)
-          );
-
-      if (!localValues.length) {
-        return 0;
-      }
-
-      return Math.round(
-        localValues.reduce(
-          (total, value) => total + value,
-          0
-        ) / localValues.length
+  const values =
+    records
+      .map((record) =>
+        Number(record?.accuracy)
+      )
+      .filter(
+        (value) =>
+          !Number.isNaN(value)
       );
-    };
 
+  if (!values.length) {
+    return 0;
+  }
+
+  return Math.round(
+    values.reduce(
+      (total, value) =>
+        total + value,
+      0
+    ) / values.length
+  );
+};
   /* =====================================================
      GAME INFORMATION
   ===================================================== */
