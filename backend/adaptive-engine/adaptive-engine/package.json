@@ -1,0 +1,10 @@
+{
+  "name": "adaptive-engine",
+  "version": "1.0.0",
+  "description": "Rule-based (and future ML) difficulty adjustment engine for the dementia cognitive gaming app",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node tests/ruleEngine.test.js"
+  },
+  "license": "MIT"
+}

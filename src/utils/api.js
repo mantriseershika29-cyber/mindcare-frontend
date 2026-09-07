@@ -47,7 +47,6 @@ async function getAuthToken() {
       "Firebase token error:",
       error
     );
-console.error("PERFORMANCE ERROR DETAILS:", JSON.stringify(data, null, 2));
 
 
     throw new Error(
@@ -413,38 +412,44 @@ export async function getSession(
    SAVE GAME PERFORMANCE
 ========================================================= */
 
-export async function savePerformance(data) {
-  const user = auth.currentUser;
+export async function savePerformance(
+  data
+) {
 
-  if (!user) {
-    throw new Error("User is not logged in.");
-  }
+  return apiRequest(
+    "/performance",
+    {
+      method:
+        "POST",
 
-  return apiRequest("/performance", {
-    method: "POST",
-    body: JSON.stringify({
-      userId: user.uid,
-      sessionId: data.sessionId,
-      gameType: data.gameType,
-      level: Number(data.level),
-      score: Number(data.score ?? data.finalScore ?? 0),
-      accuracy: Number(
-        data.accuracy ?? data.calculatedAccuracy ?? 0
-      ),
-      errors: Number(
-        data.errors ?? data.finalErrors ?? 0
-      ),
-      responseTimeSeconds: Number(
-        data.responseTimeSeconds ?? 0
-      )
-    })
-  });
+      body:
+        JSON.stringify(
+          data
+        )
+    }
+  );
+
 }
-export async function getPerformance(userId) {
-  return apiRequest(`/performance/${userId}`, {
-    method: "GET"
-  });
+
+
+/* =========================================================
+   GET USER PERFORMANCE
+========================================================= */
+
+export async function getPerformance(
+  userId
+) {
+
+  return apiRequest(
+    `/performance/${userId}`,
+    {
+      method:
+        "GET"
+    }
+  );
+
 }
+
 
 /* =========================================================
    GET USER PROGRESS

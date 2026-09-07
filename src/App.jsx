@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import CaregiverDashboard from "./pages/CaregiverDashboard";
 import GameSelection from "./pages/GameSelection";
 
 import FaceNameMatching from "./pages/FaceNameMatching";
@@ -31,6 +32,14 @@ function App() {
         <Route
           path="/dashboard"
           element={<Dashboard />}
+        />
+
+        {/* =========================
+            CAREGIVER DASHBOARD
+        ========================= */}
+        <Route
+          path="/caregiver"
+          element={<CaregiverDashboard />}
         />
 
 

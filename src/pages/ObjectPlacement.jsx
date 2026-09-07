@@ -631,21 +631,32 @@ function ObjectPlacement() {
            SAVE PERFORMANCE
         ============================================= */
 
-      
-const safeAccuracy = Math.min(
-  100,
-  Math.max(0, Number(calculatedAccuracy) || 0)
-);
+        await savePerformance({
 
-await savePerformance({
-  sessionId: sessionId,
-  gameType: "object_placement",
-  level: Number(finalLevel),
-  score: Number(finalScore),
-  accuracy: safeAccuracy,
-errors: Math.max(0, Number(finalErrors) || 0),
-  responseTimeSeconds: Number(responseTimeSeconds) || 0
-});
+          sessionId:
+            sessionId,
+
+          gameType:
+            "object_placement",
+
+          level:
+            finalLevel,
+
+          score:
+            finalScore,
+
+          accuracy:
+            calculatedAccuracy,
+
+          errors:
+            finalErrors,
+
+          responseTimeSeconds:
+            responseTimeSeconds
+
+        });
+
+
         /* =============================================
            KEEP LOCAL XP / PROGRESS
         ============================================= */
@@ -858,16 +869,14 @@ errors: Math.max(0, Number(finalErrors) || 0),
        FINAL ACCURACY
     ================================================= */
 
-    const safeScore = Number(finalScore) || 0;
-const safeTotalRounds = Number(TOTAL_ROUNDS) || 1;
+    const calculatedAccuracy =
+      Math.round(
+        (
+          finalScore /
+          TOTAL_ROUNDS
+        ) * 100
+      );
 
-const calculatedAccuracy = Math.min(
-  100,
-  Math.max(
-    0,
-    Math.round((safeScore / safeTotalRounds) * 100)
-  )
-);
 
     setFinalAccuracy(
       calculatedAccuracy

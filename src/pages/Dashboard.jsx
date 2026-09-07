@@ -331,18 +331,6 @@ function Dashboard() {
 
       }
 
-      /* -----------------------------------------------
-         { performances: [] }  <-- backend response
-      ----------------------------------------------- */
-      else if (
-        Array.isArray(
-          performanceResponse?.performances
-        )
-      ) {
-        records =
-          performanceResponse.performances;
-      }
-
 
       /* -----------------------------------------------
          { records: [] }
@@ -810,7 +798,47 @@ function Dashboard() {
     );
 
 
- 
+  /* =====================================================
+     XP
+     
+     Still local because backend progress does not
+     currently return XP.
+  ===================================================== */
+
+  const XP_PER_LEVEL =
+    500;
+
+
+  const levelStartXP =
+    (localProgress.level - 1) *
+    XP_PER_LEVEL;
+
+
+  const currentLevelXP =
+    Math.max(
+      0,
+      localProgress.xp -
+        levelStartXP
+    );
+
+
+  const xpPercentage =
+    Math.min(
+      (
+        currentLevelXP /
+        XP_PER_LEVEL
+      ) * 100,
+      100
+    );
+
+
+  const xpToNextLevel =
+    Math.max(
+      0,
+      XP_PER_LEVEL -
+        currentLevelXP
+    );
+
 
   /* =====================================================
      GAME HISTORY
@@ -838,26 +866,8 @@ function Dashboard() {
       [];
 
   }
-const totalXP =
-  gameHistory.reduce(
-    (total, game) =>
-      total + Number(game.earnedXP || 0),
-    0
-  );
 
-const XP_PER_LEVEL = 500;
 
-const currentLevelXP =
-  totalXP % XP_PER_LEVEL;
-
-const xpPercentage =
-  Math.min(
-    (currentLevelXP / XP_PER_LEVEL) * 100,
-    100
-  );
-
-const xpToNextLevel =
-  XP_PER_LEVEL - currentLevelXP;
   /* =====================================================
      TOTAL SCORE
   ===================================================== */
@@ -2084,7 +2094,7 @@ const xpToNextLevel =
                 }}
               >
 
-                {totalXP}
+                {localProgress.xp}
                 {" Total XP "}
                 •{" "}
                 {xpToNextLevel}
@@ -2912,7 +2922,7 @@ const xpToNextLevel =
               }}
             >
 
-              {totalXP}
+              {localProgress.xp}
               {" XP total"}
 
             </div>
