@@ -28,11 +28,7 @@ function PatternRecall() {
      FIXED PATTERN
   ===================================================== */
 
-  const [pattern] = useState([
-    1, 0, 1,
-    0, 1, 0,
-    0, 1, 0,
-  ]);
+ const [pattern, setPattern] = useState([]);
 
 
   /* =====================================================
@@ -41,7 +37,9 @@ function PatternRecall() {
 
   const [userPattern, setUserPattern] =
     useState(
-      Array(9).fill(0)
+      Array(
+        (Number(difficulty?.gridSize) || 3) ** 2
+      ).fill(0)
     );
 
 
@@ -334,7 +332,32 @@ function PatternRecall() {
         setDifficulty(
           parameters
         );
+const gridSize = Number(parameters?.gridSize) || 3;
+const totalCells = gridSize * gridSize;
 
+const itemCount = Math.min(
+  totalCells,
+  Number(parameters?.itemCount) || 4
+);
+
+const newPattern = Array(totalCells).fill(0);
+const positions = [];
+
+while (positions.length < itemCount) {
+  const randomIndex = Math.floor(
+    Math.random() * totalCells
+  );
+
+  if (!positions.includes(randomIndex)) {
+    positions.push(randomIndex);
+  }
+}
+
+positions.forEach((index) => {
+  newPattern[index] = 1;
+});
+
+setPattern(newPattern);
 
         /* =================================================
            CREATE BACKEND SESSION
@@ -378,7 +401,7 @@ function PatternRecall() {
         ================================================= */
 
         setUserPattern(
-          Array(9).fill(0)
+          Array(totalCells).fill(0)
         );
 
 
@@ -463,7 +486,7 @@ function PatternRecall() {
        * the overall game time, not the display time.
        *
        * Therefore the pattern remains visible
-       * for 3 seconds in this version.
+       * for 5 seconds in this version.
        */
 
       const displayTime =
@@ -887,7 +910,7 @@ function PatternRecall() {
     () => {
 
       setUserPattern(
-        Array(9).fill(0)
+        Array(gridSize * gridSize).fill(0)
       );
 
 
@@ -1435,7 +1458,7 @@ function PatternRecall() {
                   "grid",
 
                 gridTemplateColumns:
-                  "repeat(3, 1fr)",
+                  `repeat(${gridSize}, 1fr)`,
 
                 gap:
                   "5px",
@@ -1883,10 +1906,10 @@ function PatternRecall() {
                   "grid",
 
                 gridTemplateColumns:
-                  "repeat(3, 1fr)",
+                  `repeat(${gridSize}, 1fr)`,
 
                 gridTemplateRows:
-                  "repeat(3, 1fr)",
+                  `repeat(${gridSize}, 1fr)`,
 
                 gap:
                   "7px",
@@ -2084,10 +2107,10 @@ function PatternRecall() {
                   "grid",
 
                 gridTemplateColumns:
-                  "repeat(3, 1fr)",
+                  `repeat(${gridSize}, 1fr)`,
 
                 gridTemplateRows:
-                  "repeat(3, 1fr)",
+                  `repeat(${gridSize}, 1fr)`,
 
                 gap:
                   "7px",
