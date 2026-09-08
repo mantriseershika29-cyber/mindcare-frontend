@@ -333,6 +333,17 @@ function Dashboard() {
 
 
       /* -----------------------------------------------
+         { performances: [] }
+      ----------------------------------------------- */
+      else if (
+        Array.isArray(
+          performanceResponse?.performances
+        )
+      ) {
+        records =
+          performanceResponse.performances;
+      }
+      /* -----------------------------------------------
          { records: [] }
       ----------------------------------------------- */
 
