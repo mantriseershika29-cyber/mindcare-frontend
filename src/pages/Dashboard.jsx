@@ -309,22 +309,10 @@ function Dashboard() {
           performanceResponse
         )
       ) {
+
         records =
           performanceResponse;
-      }
 
-
-      /* -----------------------------------------------
-         { performances: [] }
-         BACKEND RESPONSE FORMAT
-      ----------------------------------------------- */
-      else if (
-        Array.isArray(
-          performanceResponse?.performances
-        )
-      ) {
-        records =
-          performanceResponse.performances;
       }
 
 
@@ -383,8 +371,8 @@ function Dashboard() {
 
     } catch (error) {
 
-      console.error(
-        "PERFORMANCE API FAILED:",
+      console.warn(
+        "Performance API unavailable:",
         error
       );
 
@@ -579,43 +567,174 @@ function Dashboard() {
      Derived from backend performance.
   ===================================================== */
 
- 
+  const getGameAccuracy =
+    (
+      gameType
+    ) => {
+
+      const records =
+        backendPerformance.filter(
+          (record) =>
+            record?.gameType ===
+            gameType
+        );
+
+
+      if (
+        !records.length
+      ) {
+
+        return 0;
+
+      }
+
+
+      const values =
+        records
+          .map(
+            (record) =>
+              Number(
+                record?.accuracy
+              )
+          )
+          .filter(
+            (value) =>
+              !Number.isNaN(
+                value
+              )
+          );
+
+
+      if (
+        !values.length
+      ) {
+
+        return 0;
+
+      }
+
+
+      const average =
+        values.reduce(
+          (
+            total,
+            value
+          ) =>
+            total + value,
+          0
+        ) /
+        values.length;
+
+
+      return Math.round(
+        average
+      );
+
+    };
+
+
   /* =====================================================
-     GAME ACCURACY
-     
-     Derived from backend performance.
+     GAME INFORMATION
   ===================================================== */
 
-  const getGameAccuracy = (gameType) => {
-    const records = Array.isArray(backendPerformance)
-      ? backendPerformance.filter(
-          (record) =>
-            String(record?.gameType || "")
-              .trim()
-              .toLowerCase()
-              .replace(/[\s-]+/g, "_") === gameType
-        )
-      : [];
+  const games = [
 
-    if (records.length === 0) {
-      return 0;
+    {
+      name:
+        "Pattern Recall",
+
+      gameType:
+        "pattern_recall",
+
+      shortIcon:
+        "▦",
+
+      accuracy:
+        getGameAccuracy(
+          "pattern_recall"
+        ),
+
+      color:
+        "blue",
+
+      path:
+        "/pattern-recall"
+
+    },
+
+
+    {
+      name:
+        "Sequencing",
+
+      gameType:
+        "sequencing",
+
+      shortIcon:
+        "123",
+
+      accuracy:
+        getGameAccuracy(
+          "sequencing"
+        ),
+
+      color:
+        "green",
+
+      path:
+        "/sequencing"
+
+    },
+
+
+    {
+      name:
+        "Face–Name Matching",
+
+      gameType:
+        "face_name_matching",
+
+      shortIcon:
+        "●",
+
+      accuracy:
+        getGameAccuracy(
+          "face_name_matching"
+        ),
+
+      color:
+        "orange",
+
+      path:
+        "/face-name-matching"
+
+    },
+
+
+    {
+      name:
+        "Object Placement",
+
+      gameType:
+        "object_placement",
+
+      shortIcon:
+        "◇",
+
+      accuracy:
+        getGameAccuracy(
+          "object_placement"
+        ),
+
+      color:
+        "purple",
+
+      path:
+        "/object-placement"
+
     }
 
-    const accuracies = records
-      .map((record) => Number(record?.accuracy))
-      .filter((value) => !Number.isNaN(value));
-
-    if (accuracies.length === 0) {
-      return 0;
-    }
-
-    const total = accuracies.reduce(
-      (sum, value) => sum + value,
-      0
-    );
-
-    return Math.round(total / accuracies.length);
-  };
+  ];
 
 
   /* =====================================================
