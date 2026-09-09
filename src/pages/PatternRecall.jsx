@@ -1031,8 +1031,7 @@ function PatternRecall() {
       0, 1, 0,
     ];
 
-    const startLevel = clampLevel(level);
-
+    const startLevel = Math.min(4, Math.max(1, Number(level) || 1));
     const startDifficulty =
       getDefaultDifficulty(startLevel);
 
