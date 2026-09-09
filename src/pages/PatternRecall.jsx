@@ -13,12 +13,13 @@ import {
 function PatternRecall() {
   const navigate = useNavigate();
 
+  // Pattern Recall uses its own level storage.
+  // This prevents another game from changing Pattern Recall's level.
+  const PATTERN_RECALL_LEVEL_KEY = "patternRecallLevel";
+
   const [screen, setScreen] = useState("start");
 
-  // Dynamic pattern generated from backend difficulty
   const [pattern, setPattern] = useState([]);
-
-  // Dynamic user answer
   const [userPattern, setUserPattern] = useState([]);
 
   const [score, setScore] = useState(0);
@@ -26,9 +27,7 @@ function PatternRecall() {
   const [attempts, setAttempts] = useState(0);
   const [earnedXP, setEarnedXP] = useState(0);
 
-  const [level, setLevel] = useState(
-    Number(localStorage.getItem("mindcareLevel")) || 1
-  );
+ const [level, setLevel] = useState(1);
 
   const [difficulty, setDifficulty] = useState(null);
   const [sessionId, setSessionId] = useState("");
@@ -38,7 +37,10 @@ function PatternRecall() {
 
   const patternTimerRef = useRef(null);
 
-  // Clean up the 3-second timer when leaving the page
+  /* =====================================================
+     CLEANUP
+  ===================================================== */
+
   useEffect(() => {
     return () => {
       if (patternTimerRef.current) {
@@ -52,7 +54,9 @@ function PatternRecall() {
   ===================================================== */
 
   const getFriendlyError = (err, fallback) => {
-    const message = String(err?.message || "").toLowerCase();
+    const message = String(
+      err?.message || ""
+    ).toLowerCase();
 
     if (
       message.includes("failed to fetch") ||
@@ -86,10 +90,19 @@ function PatternRecall() {
   ===================================================== */
 
   const getSafeLevel = () => {
-    const storedLevel =
-      Number(localStorage.getItem("mindcareLevel")) || 1;
+    const storedLevel = Number(
+      localStorage.getItem(PATTERN_RECALL_LEVEL_KEY)
+    );
 
-    return Math.min(4, Math.max(1, storedLevel));
+    if (
+      !Number.isFinite(storedLevel) ||
+      storedLevel < 1 ||
+      storedLevel > 4
+    ) {
+      return 1;
+    }
+
+    return Math.floor(storedLevel);
   };
 
   /* =====================================================
@@ -99,11 +112,14 @@ function PatternRecall() {
   const saveAdaptiveLevel = (nextLevel) => {
     const safeNextLevel = Math.min(
       4,
-      Math.max(1, Number(nextLevel) || 1)
+      Math.max(
+        1,
+        Math.floor(Number(nextLevel) || 1)
+      )
     );
 
     localStorage.setItem(
-      "mindcareLevel",
+      PATTERN_RECALL_LEVEL_KEY,
       String(safeNextLevel)
     );
 
@@ -113,9 +129,7 @@ function PatternRecall() {
   };
 
   /* =====================================================
-     DEFAULT DIFFICULTY
-     
-     Used only if backend parameters are missing.
+     FIXED LEVEL DIFFICULTY
   ===================================================== */
 
   const getDefaultDifficulty = (currentLevel) => {
@@ -123,55 +137,71 @@ function PatternRecall() {
       1: {
         gridSize: 2,
         itemCount: 4,
-        timeLimitSeconds: 90,
+        timeLimitSeconds: 45,
         distractorCount: 0,
       },
 
       2: {
         gridSize: 3,
         itemCount: 6,
-        timeLimitSeconds: 75,
+        timeLimitSeconds: 60,
         distractorCount: 1,
       },
 
       3: {
         gridSize: 4,
         itemCount: 8,
-        timeLimitSeconds: 60,
+        timeLimitSeconds: 75,
         distractorCount: 2,
       },
 
       4: {
         gridSize: 5,
         itemCount: 10,
-        timeLimitSeconds: 45,
+        timeLimitSeconds: 90,
         distractorCount: 3,
       },
     };
 
-    return defaults[currentLevel] || defaults[1];
+    return (
+      defaults[currentLevel] ||
+      defaults[1]
+    );
   };
 
   /* =====================================================
      GENERATE RANDOM PATTERN
   ===================================================== */
 
-  const generatePattern = (gridSize, itemCount) => {
-    const totalCells = gridSize * gridSize;
+  const generatePattern = (
+    gridSize,
+    itemCount
+  ) => {
+    const totalCells =
+      gridSize * gridSize;
 
     const safeItemCount = Math.min(
       totalCells,
-      Math.max(1, itemCount)
+      Math.max(
+        1,
+        Number(itemCount) || 1
+      )
     );
 
-    const newPattern = Array(totalCells).fill(0);
+    const newPattern =
+      Array(totalCells).fill(0);
 
     const positions = new Set();
 
-    while (positions.size < safeItemCount) {
-      const randomIndex = Math.floor(
-        Math.random() * totalCells
-      );
+    while (
+      positions.size <
+      safeItemCount
+    ) {
+      const randomIndex =
+        Math.floor(
+          Math.random() *
+            totalCells
+        );
 
       positions.add(randomIndex);
     }
@@ -185,44 +215,60 @@ function PatternRecall() {
 
   /* =====================================================
      CALCULATE RESULTS
-     
-     Only highlighted cells selected correctly count
-     as correct.
-
-     Errors =
-       wrong selections + missed highlighted cells
   ===================================================== */
 
-  const calculatePatternResults = (answer) => {
+  const calculatePatternResults = (
+    answer
+  ) => {
     let correct = 0;
     let wrong = 0;
     let missed = 0;
 
-    for (let i = 0; i < pattern.length; i++) {
-      const correctCell = pattern[i] === 1;
-      const selectedCell = answer[i] === 1;
+    for (
+      let i = 0;
+      i < pattern.length;
+      i++
+    ) {
+      const correctCell =
+        pattern[i] === 1;
 
-      if (correctCell && selectedCell) {
+      const selectedCell =
+        answer[i] === 1;
+
+      if (
+        correctCell &&
+        selectedCell
+      ) {
         correct++;
       }
 
-      if (!correctCell && selectedCell) {
+      if (
+        !correctCell &&
+        selectedCell
+      ) {
         wrong++;
       }
 
-      if (correctCell && !selectedCell) {
+      if (
+        correctCell &&
+        !selectedCell
+      ) {
         missed++;
       }
     }
 
-    const errors = wrong + missed;
+    const errors =
+      wrong + missed;
 
-    const totalRelevant = correct + errors;
+    const totalRelevant =
+      correct + errors;
 
     const calculatedAccuracy =
       totalRelevant > 0
         ? Math.round(
-            (correct / totalRelevant) * 100
+            (correct /
+              totalRelevant) *
+              100
           )
         : 0;
 
@@ -231,7 +277,8 @@ function PatternRecall() {
       wrong,
       missed,
       errors,
-      accuracy: calculatedAccuracy,
+      accuracy:
+        calculatedAccuracy,
     };
   };
 
@@ -244,60 +291,86 @@ function PatternRecall() {
     setSaveStatus("");
     setLoading(true);
 
-    const currentLevel = getSafeLevel();
-
+    
+    const currentLevel = level;
     try {
       /* =================================================
          GET BACKEND DIFFICULTY
       ================================================= */
 
-      const difficultyResponse =
-        await getDifficulty(
-          "pattern_recall",
+      let backendParameters = {};
+
+      try {
+        const difficultyResponse =
+          await getDifficulty(
+            "pattern_recall",
+            currentLevel
+          );
+
+        console.log(
+          "Pattern Recall Difficulty:",
+          difficultyResponse
+        );
+
+        backendParameters =
+          difficultyResponse?.parameters ||
+          {};
+      } catch (difficultyError) {
+        console.warn(
+          "Backend difficulty unavailable. Using frontend defaults.",
+          difficultyError
+        );
+      }
+
+      /* =================================================
+         LEVEL PARAMETERS
+
+         Pattern Recall always follows the required
+         Level 1-4 mapping.
+      ================================================= */
+
+      const levelParameters =
+        getDefaultDifficulty(
           currentLevel
         );
 
-      console.log(
-        "Pattern Recall Difficulty:",
-        difficultyResponse
-      );
-
-      const backendParameters =
-        difficultyResponse?.parameters || {};
-
-      const defaultParameters =
-        getDefaultDifficulty(currentLevel);
-
-      const rawGridSize =
-        Number(
-          backendParameters.gridSize
-        ) || defaultParameters.gridSize;
-
-      const rawItemCount =
-        Number(
-          backendParameters.itemCount
-        ) || defaultParameters.itemCount;
-
-      const safeGridSize = Math.min(
-        5,
-        Math.max(2, rawGridSize)
-      );
+      const safeGridSize =
+        levelParameters.gridSize;
 
       const totalCells =
-        safeGridSize * safeGridSize;
+        safeGridSize *
+        safeGridSize;
 
-      const safeItemCount = Math.min(
-        totalCells,
-        Math.max(1, rawItemCount)
-      );
+      const safeItemCount =
+        Math.min(
+          totalCells,
+          levelParameters.itemCount
+        );
+
+      /* =================================================
+         FINAL PARAMETERS
+      ================================================= */
 
       const safeParameters = {
-        ...defaultParameters,
         ...backendParameters,
 
-        gridSize: safeGridSize,
-        itemCount: safeItemCount,
+        gridSize:
+          safeGridSize,
+
+        itemCount:
+          safeItemCount,
+
+        timeLimitSeconds:
+          levelParameters.timeLimitSeconds,
+
+        distractorCount:
+          levelParameters.distractorCount,
       };
+
+      console.log(
+        "Final Pattern Recall Parameters:",
+        safeParameters
+      );
 
       setDifficulty(
         safeParameters
@@ -327,8 +400,10 @@ function PatternRecall() {
 
       const session =
         await createSession({
-          gameType: "pattern_recall",
-          level: currentLevel,
+          gameType:
+            "pattern_recall",
+          level:
+            currentLevel,
         });
 
       if (
@@ -352,10 +427,13 @@ function PatternRecall() {
       setAccuracy(0);
       setEarnedXP(0);
       setAttempts(0);
-      setLevel(currentLevel);
+
+      setLevel(
+        currentLevel
+      );
 
       /* =================================================
-         INSTRUCTIONS
+         SHOW INSTRUCTIONS
       ================================================= */
 
       setScreen(
@@ -401,10 +479,26 @@ function PatternRecall() {
       );
     }
 
+    const currentLevel = level;
+
+    const levelParameters =
+      getDefaultDifficulty(
+        currentLevel
+      );
+
+    const displayTime =
+      levelParameters.timeLimitSeconds;
+
+    console.log(
+      "Pattern display time:",
+      displayTime,
+      "seconds"
+    );
+
     patternTimerRef.current =
       setTimeout(() => {
         setScreen("recall");
-      }, 3000);
+      }, displayTime * 1000);
   };
 
   /* =====================================================
@@ -412,225 +506,274 @@ function PatternRecall() {
   ===================================================== */
 
   const selectCell = (index) => {
-    if (screen !== "recall" || loading) {
+    if (
+      screen !== "recall" ||
+      loading
+    ) {
       return;
     }
 
-    setUserPattern((previous) => {
-      const updated = [...previous];
+    setUserPattern(
+      (previous) => {
+        const updated =
+          [...previous];
 
-      updated[index] =
-        updated[index] === 0
-          ? 1
-          : 0;
+        updated[index] =
+          updated[index] === 0
+            ? 1
+            : 0;
 
-      return updated;
-    });
+        return updated;
+      }
+    );
   };
 
   /* =====================================================
      SUBMIT PATTERN
   ===================================================== */
 
-  const submitPattern = async () => {
-    if (loading) {
-      return;
-    }
+  const submitPattern =
+    async () => {
+      if (loading) {
+        return;
+      }
 
-    setLoading(true);
-    setError("");
-    setSaveStatus(
-      "Saving your performance..."
-    );
+      setLoading(true);
+      setError("");
 
-    const currentLevel =
-      getSafeLevel();
-
-    const results =
-      calculatePatternResults(
-        userPattern
+      setSaveStatus(
+        "Saving your performance..."
       );
 
-    const {
-      correct,
-      errors,
-      accuracy: calculatedAccuracy,
-    } = results;
-
-    const newAttempts =
-      attempts + 1;
-
-    const responseTimeSeconds = 3;
-
-    /* =================================================
-       UPDATE UI
-    ================================================= */
-
-    setScore(correct);
-    setAccuracy(
-      calculatedAccuracy
-    );
-    setAttempts(
-      newAttempts
-    );
-
-    try {
-      /* =================================================
-         SESSION CHECK
-      ================================================= */
-
-      if (!sessionId) {
-        throw new Error(
-          "No active backend session was found."
+     const currentLevel = level;
+      const results =
+        calculatePatternResults(
+          userPattern
         );
-      }
 
-      /* =================================================
-         SAVE PERFORMANCE
-      ================================================= */
-
-      await savePerformance({
-        sessionId,
-        gameType: "pattern_recall",
-        level: currentLevel,
-        score: correct,
-        accuracy: calculatedAccuracy,
+      const {
+        correct,
         errors,
-        responseTimeSeconds,
-      });
+        accuracy:
+          calculatedAccuracy,
+      } = results;
+
+      const newAttempts =
+        attempts + 1;
+
+      const responseTimeSeconds =
+        getDefaultDifficulty(
+          currentLevel
+        ).timeLimitSeconds;
 
       /* =================================================
-         ADAPTIVE DIFFICULTY
+         UPDATE UI
       ================================================= */
 
-      let nextLevel =
-        currentLevel;
+      setScore(
+        correct
+      );
+
+      setAccuracy(
+        calculatedAccuracy
+      );
+
+      setAttempts(
+        newAttempts
+      );
 
       try {
-        const adaptiveResponse =
-          await getNextLevel(
+        /* =================================================
+           SESSION CHECK
+        ================================================= */
+
+        if (!sessionId) {
+          throw new Error(
+            "No active backend session was found."
+          );
+        }
+
+        /* =================================================
+           SAVE PERFORMANCE
+        ================================================= */
+
+        await savePerformance({
+          sessionId:
+            sessionId,
+
+          gameType:
             "pattern_recall",
+
+          level:
             currentLevel,
-            calculatedAccuracy
-          );
 
-        console.log(
-          "Adaptive Difficulty Response:",
-          adaptiveResponse
-        );
+          score:
+            correct,
 
-        if (
-          adaptiveResponse &&
-          adaptiveResponse.nextLevel !==
-            undefined &&
-          adaptiveResponse.nextLevel !==
-            null
-        ) {
-          nextLevel = Math.min(
-            4,
-            Math.max(
-              1,
-              Number(
-                adaptiveResponse.nextLevel
-              )
-            )
-          );
-        }
+          accuracy:
+            calculatedAccuracy,
 
-        saveAdaptiveLevel(
-          nextLevel
-        );
+          errors:
+            errors,
 
-        if (
-          nextLevel >
-          currentLevel
-        ) {
-          setSaveStatus(
-            `Performance saved. Difficulty increased to Level ${nextLevel}.`
-          );
-        } else if (
-          nextLevel <
-          currentLevel
-        ) {
-          setSaveStatus(
-            `Performance saved. Difficulty adjusted to Level ${nextLevel}.`
-          );
-        } else {
-          setSaveStatus(
-            `Performance saved. You will continue at Level ${nextLevel}.`
-          );
-        }
-      } catch (adaptiveError) {
-        console.warn(
-          "Adaptive difficulty unavailable:",
-          adaptiveError
-        );
-
-        setSaveStatus(
-          "Performance saved successfully."
-        );
-      }
-
-      /* =================================================
-         LOCAL PROGRESS
-      ================================================= */
-
-      const result =
-        completeGame({
-          gameName: "Pattern Recall",
-          score: correct,
-          accuracy: calculatedAccuracy,
-          responseTime:
+          responseTimeSeconds:
             responseTimeSeconds,
         });
 
-      setEarnedXP(
-        result.earnedXP
-      );
+        /* =================================================
+           ADAPTIVE DIFFICULTY
+        ================================================= */
 
-      /* =================================================
-         KEEP ADAPTIVE LEVEL
-      ================================================= */
+        let nextLevel =
+          currentLevel;
 
-      const storedAdaptiveLevel =
-        getSafeLevel();
+        try {
+          const adaptiveResponse =
+            await getNextLevel(
+              "pattern_recall",
+              currentLevel,
+              calculatedAccuracy
+            );
 
-      setLevel(
-        storedAdaptiveLevel
-      );
+          console.log(
+            "Adaptive Difficulty Response:",
+            adaptiveResponse
+          );
 
-      /* =================================================
-         SHOW RESULTS
-      ================================================= */
+          const requestedLevel =
+            Number(
+              adaptiveResponse?.nextLevel
+            );
 
-      setScreen(
-        "results"
-      );
-    } catch (err) {
-      console.error(
-        "Pattern Recall performance error:",
-        err
-      );
+          /*
+           * IMPORTANT:
+           * Pattern Recall can only move
+           * one level at a time.
+           */
 
-      setSaveStatus("");
+          if (
+            Number.isFinite(
+              requestedLevel
+            )
+          ) {
+            if (
+              requestedLevel >
+              currentLevel
+            ) {
+              nextLevel =
+                currentLevel + 1;
+            } else if (
+              requestedLevel <
+              currentLevel
+            ) {
+              nextLevel =
+                currentLevel - 1;
+            }
+          }
 
-      setError(
-        getFriendlyError(
-          err,
-          "Your game finished, but the result could not be saved. Please try again."
-        )
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+          nextLevel =
+            Math.min(
+              4,
+              Math.max(
+                1,
+                nextLevel
+              )
+            );
+
+          saveAdaptiveLevel(
+            nextLevel
+          );
+
+          setSaveStatus(
+            `Performance saved. You will continue at Level ${nextLevel}.`
+          );
+
+        } catch (
+          adaptiveError
+        ) {
+          console.warn(
+            "Adaptive difficulty unavailable:",
+            adaptiveError
+          );
+
+          /*
+           * If adaptive API fails,
+           * stay at the current level.
+           */
+
+          saveAdaptiveLevel(
+            currentLevel
+          );
+
+          setSaveStatus(
+            "Performance saved successfully."
+          );
+        }
+
+        /* =================================================
+           LOCAL PROGRESS
+        ================================================= */
+
+        const result =
+          completeGame({
+            gameName:
+              "Pattern Recall",
+
+            score:
+              correct,
+
+            accuracy:
+              calculatedAccuracy,
+
+            responseTime:
+              responseTimeSeconds,
+          });
+
+        setEarnedXP(
+          result.earnedXP
+        );
+
+        /* =================================================
+           KEEP SAVED ADAPTIVE LEVEL
+        ================================================= */
+
+       setLevel(nextLevel);
+
+        /* =================================================
+           SHOW RESULTS
+        ================================================= */
+
+        setScreen(
+          "results"
+        );
+
+      } catch (err) {
+        console.error(
+          "Pattern Recall performance error:",
+          err
+        );
+
+        setSaveStatus("");
+
+        setError(
+          getFriendlyError(
+            err,
+            "Your game finished, but the result could not be saved. Please try again."
+          )
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
   /* =====================================================
      PLAY AGAIN
   ===================================================== */
 
   const playAgain = () => {
-    if (patternTimerRef.current) {
+    if (
+      patternTimerRef.current
+    ) {
       clearTimeout(
         patternTimerRef.current
       );
@@ -649,13 +792,9 @@ function PatternRecall() {
     setSessionId("");
     setDifficulty(null);
 
-    setLevel(
-      getSafeLevel()
-    );
+   setLevel(level);
 
-    setScreen(
-      "start"
-    );
+    setScreen("start");
   };
 
   /* =====================================================
@@ -663,7 +802,9 @@ function PatternRecall() {
   ===================================================== */
 
   const goBack = () => {
-    if (patternTimerRef.current) {
+    if (
+      patternTimerRef.current
+    ) {
       clearTimeout(
         patternTimerRef.current
       );
@@ -855,9 +996,8 @@ function PatternRecall() {
       5,
       Math.max(
         2,
-        Number(
-          difficulty?.gridSize
-        ) || 3
+        Number(difficulty?.gridSize) ||
+          getDefaultDifficulty(level).gridSize
       )
     );
 
@@ -891,6 +1031,11 @@ function PatternRecall() {
       0, 1, 0,
     ];
 
+    const startLevel = clampLevel(level);
+
+    const startDifficulty =
+      getDefaultDifficulty(startLevel);
+
     return (
       <div style={pageStyle}>
         <button
@@ -914,7 +1059,7 @@ function PatternRecall() {
 
             <div style={levelBadgeStyle}>
               CURRENT LEVEL{" "}
-              {getSafeLevel()}
+              {startLevel}
             </div>
 
             <div
@@ -934,7 +1079,10 @@ function PatternRecall() {
               }}
             >
               {previewPattern.map(
-                (cell, index) => (
+                (
+                  cell,
+                  index
+                ) => (
                   <div
                     key={index}
                     style={{
@@ -942,7 +1090,8 @@ function PatternRecall() {
                         cell
                           ? "#9551ff"
                           : "#242844",
-                      borderRadius: "3px",
+                      borderRadius:
+                        "3px",
                     }}
                   />
                 )
@@ -951,10 +1100,14 @@ function PatternRecall() {
 
             <h2
               style={{
-                margin: "0 0 10px",
-                fontSize: "19px",
-                fontWeight: "500",
-                color: "#ffffff",
+                margin:
+                  "0 0 10px",
+                fontSize:
+                  "19px",
+                fontWeight:
+                  "500",
+                color:
+                  "#ffffff",
               }}
             >
               Remember the pattern
@@ -962,22 +1115,39 @@ function PatternRecall() {
 
             <p
               style={{
-                maxWidth: "320px",
-                margin: "0 0 25px",
-                fontSize: "13px",
-                lineHeight: "1.7",
-                color: "#9298ae",
+                maxWidth:
+                  "320px",
+                margin:
+                  "0 0 25px",
+                fontSize:
+                  "13px",
+                lineHeight:
+                  "1.7",
+                color:
+                  "#9298ae",
               }}
             >
-              A pattern will appear for
-              3 seconds. Remember which
-              squares are highlighted.
+              A pattern will appear
+              for{" "}
+              {
+                startDifficulty.timeLimitSeconds
+              }{" "}
+              seconds.
+              <br />
+              Remember which squares
+              are highlighted.
             </p>
 
             <button
-              style={primaryButtonStyle}
-              onClick={startGame}
-              disabled={loading}
+              style={
+                primaryButtonStyle
+              }
+              onClick={
+                startGame
+              }
+              disabled={
+                loading
+              }
             >
               {loading
                 ? "LOADING..."
@@ -993,7 +1163,10 @@ function PatternRecall() {
      INSTRUCTIONS
   ===================================================== */
 
-  if (screen === "instructions") {
+  if (
+    screen ===
+    "instructions"
+  ) {
     return (
       <div style={pageStyle}>
         <button
@@ -1009,57 +1182,83 @@ function PatternRecall() {
           </h1>
 
           <div style={contentStyle}>
-            <div style={levelBadgeStyle}>
+            <div
+              style={levelBadgeStyle}
+            >
               LEVEL {level}
             </div>
 
             {difficulty && (
-              <div style={difficultyStyle}>
+              <div
+                style={
+                  difficultyStyle
+                }
+              >
                 <strong
                   style={{
-                    color: "#c8a5ff",
+                    color:
+                      "#c8a5ff",
                   }}
                 >
-                  Backend Difficulty
+                  Difficulty
                 </strong>
 
                 <br />
 
                 Grid:{" "}
-                {difficulty.gridSize} ×{" "}
-                {difficulty.gridSize}
+                {
+                  difficulty.gridSize
+                } ×{" "}
+                {
+                  difficulty.gridSize
+                }
 
                 {" • "}
 
                 Items:{" "}
-                {difficulty.itemCount}
+                {
+                  difficulty.itemCount
+                }
 
                 {" • "}
 
                 Time:{" "}
-                {difficulty.timeLimitSeconds}s
+                {
+                  difficulty.timeLimitSeconds
+                }s
 
                 {" • "}
 
                 Distractors:{" "}
-                {difficulty.distractorCount ?? 0}
+                {
+                  difficulty.distractorCount ??
+                  0
+                }
               </div>
             )}
 
             <div
               style={{
-                width: "75px",
-                height: "75px",
-                borderRadius: "50%",
+                width:
+                  "75px",
+                height:
+                  "75px",
+                borderRadius:
+                  "50%",
                 background:
                   "rgba(132,59,215,0.14)",
                 border:
                   "1px solid rgba(155,81,255,0.25)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "30px",
-                marginBottom: "22px",
+                display:
+                  "flex",
+                alignItems:
+                  "center",
+                justifyContent:
+                  "center",
+                fontSize:
+                  "30px",
+                marginBottom:
+                  "22px",
               }}
             >
               ✦
@@ -1067,9 +1266,12 @@ function PatternRecall() {
 
             <h2
               style={{
-                margin: "0 0 10px",
-                fontSize: "19px",
-                fontWeight: "500",
+                margin:
+                  "0 0 10px",
+                fontSize:
+                  "19px",
+                fontWeight:
+                  "500",
               }}
             >
               Get ready
@@ -1077,21 +1279,32 @@ function PatternRecall() {
 
             <p
               style={{
-                maxWidth: "320px",
-                margin: "0 0 25px",
-                fontSize: "13px",
-                lineHeight: "1.7",
-                color: "#9298ad",
+                maxWidth:
+                  "320px",
+                margin:
+                  "0 0 25px",
+                fontSize:
+                  "13px",
+                lineHeight:
+                  "1.7",
+                color:
+                  "#9298ad",
               }}
             >
-              Study the highlighted squares
-              carefully. You will need to
-              recreate exactly what you see.
+              Study the highlighted
+              squares carefully.
+              You will need to
+              recreate exactly what
+              you see.
             </p>
 
             <button
-              style={primaryButtonStyle}
-              onClick={showPattern}
+              style={
+                primaryButtonStyle
+              }
+              onClick={
+                showPattern
+              }
             >
               GOT IT
             </button>
@@ -1105,7 +1318,10 @@ function PatternRecall() {
      SHOW PATTERN
   ===================================================== */
 
-  if (screen === "pattern") {
+  if (
+    screen ===
+    "pattern"
+  ) {
     return (
       <div style={pageStyle}>
         <button
@@ -1121,15 +1337,20 @@ function PatternRecall() {
           </h1>
 
           <div style={contentStyle}>
-            <div style={levelBadgeStyle}>
+            <div
+              style={levelBadgeStyle}
+            >
               LEVEL {level}
             </div>
 
             <h2
               style={{
-                margin: "0 0 8px",
-                fontSize: "19px",
-                fontWeight: "500",
+                margin:
+                  "0 0 8px",
+                fontSize:
+                  "19px",
+                fontWeight:
+                  "500",
               }}
             >
               LOOK CAREFULLY
@@ -1137,9 +1358,12 @@ function PatternRecall() {
 
             <p
               style={{
-                margin: "0 0 22px",
-                fontSize: "13px",
-                color: "#9298ad",
+                margin:
+                  "0 0 22px",
+                fontSize:
+                  "13px",
+                color:
+                  "#9298ad",
               }}
             >
               Remember the highlighted
@@ -1148,7 +1372,10 @@ function PatternRecall() {
 
             <div style={gridStyle}>
               {pattern.map(
-                (cell, index) => (
+                (
+                  cell,
+                  index
+                ) => (
                   <div
                     key={index}
                     style={{
@@ -1162,7 +1389,8 @@ function PatternRecall() {
                           ? "1px solid #c99aff"
                           : "1px solid #363b5b",
 
-                      borderRadius: "6px",
+                      borderRadius:
+                        "6px",
 
                       boxShadow:
                         cell
@@ -1176,13 +1404,21 @@ function PatternRecall() {
 
             <p
               style={{
-                marginTop: "20px",
-                fontSize: "11px",
-                color: "#777f98",
+                marginTop:
+                  "20px",
+                fontSize:
+                  "11px",
+                color:
+                  "#777f98",
               }}
             >
               Pattern will disappear
-              in 3 seconds...
+              in{" "}
+              {
+                difficulty?.timeLimitSeconds ||
+                getDefaultDifficulty(level).timeLimitSeconds
+              }{" "}
+              seconds...
             </p>
           </div>
         </div>
@@ -1194,7 +1430,10 @@ function PatternRecall() {
      RECALL
   ===================================================== */
 
-  if (screen === "recall") {
+  if (
+    screen ===
+    "recall"
+  ) {
     const liveResults =
       calculatePatternResults(
         userPattern
@@ -1217,9 +1456,12 @@ function PatternRecall() {
           <div style={contentStyle}>
             <h2
               style={{
-                margin: "0 0 8px",
-                fontSize: "19px",
-                fontWeight: "500",
+                margin:
+                  "0 0 8px",
+                fontSize:
+                  "19px",
+                fontWeight:
+                  "500",
               }}
             >
               Recreate the pattern
@@ -1227,9 +1469,12 @@ function PatternRecall() {
 
             <p
               style={{
-                margin: "0 0 20px",
-                fontSize: "13px",
-                color: "#9399ae",
+                margin:
+                  "0 0 20px",
+                fontSize:
+                  "13px",
+                color:
+                  "#9399ae",
               }}
             >
               Select the squares that
@@ -1244,26 +1489,38 @@ function PatternRecall() {
 
             <div style={gridStyle}>
               {userPattern.map(
-                (cell, index) => (
+                (
+                  cell,
+                  index
+                ) => (
                   <button
                     key={index}
                     type="button"
                     onClick={() =>
-                      selectCell(index)
+                      selectCell(
+                        index
+                      )
                     }
-                    disabled={loading}
+                    disabled={
+                      loading
+                    }
                     style={{
-                      width: "100%",
-                      height: "100%",
-                      padding: 0,
-                      margin: 0,
+                      width:
+                        "100%",
+                      height:
+                        "100%",
+                      padding:
+                        0,
+                      margin:
+                        0,
 
                       border:
                         cell
                           ? "2px solid #be88ff"
                           : "1px solid #363b5b",
 
-                      borderRadius: "6px",
+                      borderRadius:
+                        "6px",
 
                       background:
                         cell
@@ -1298,50 +1555,71 @@ function PatternRecall() {
 
             <div
               style={{
-                display: "flex",
-                gap: "9px",
-                marginTop: "20px",
+                display:
+                  "flex",
+                gap:
+                  "9px",
+                marginTop:
+                  "20px",
               }}
             >
               <div
                 style={{
-                  padding: "8px 13px",
+                  padding:
+                    "8px 13px",
                   border:
                     "1px solid rgba(150,158,190,0.18)",
-                  borderRadius: "7px",
+                  borderRadius:
+                    "7px",
                   background:
                     "rgba(255,255,255,0.035)",
-                  color: "#c0c5d5",
-                  fontSize: "11px",
+                  color:
+                    "#c0c5d5",
+                  fontSize:
+                    "11px",
                 }}
               >
-                Score: {liveResults.correct}
+                Score:{" "}
+                {
+                  liveResults.correct
+                }
               </div>
 
               <div
                 style={{
-                  padding: "8px 13px",
+                  padding:
+                    "8px 13px",
                   border:
                     "1px solid rgba(150,158,190,0.18)",
-                  borderRadius: "7px",
+                  borderRadius:
+                    "7px",
                   background:
                     "rgba(255,255,255,0.035)",
-                  color: "#c0c5d5",
-                  fontSize: "11px",
+                  color:
+                    "#c0c5d5",
+                  fontSize:
+                    "11px",
                 }}
               >
                 Accuracy:{" "}
-                {liveResults.accuracy}%
+                {
+                  liveResults.accuracy
+                }%
               </div>
             </div>
 
             <button
               style={{
                 ...primaryButtonStyle,
-                marginTop: "18px",
+                marginTop:
+                  "18px",
               }}
-              onClick={submitPattern}
-              disabled={loading}
+              onClick={
+                submitPattern
+              }
+              disabled={
+                loading
+              }
             >
               {loading
                 ? "SAVING..."
@@ -1357,13 +1635,17 @@ function PatternRecall() {
      RESULTS
   ===================================================== */
 
-  if (screen === "results") {
+  if (
+    screen ===
+    "results"
+  ) {
     const itemCount =
       Number(
         difficulty?.itemCount
       ) ||
       pattern.filter(
-        (cell) => cell === 1
+        (cell) =>
+          cell === 1
       ).length;
 
     return (
@@ -1383,56 +1665,79 @@ function PatternRecall() {
           <div style={contentStyle}>
             <div
               style={{
-                width: "65px",
-                height: "65px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "50%",
+                width:
+                  "65px",
+                height:
+                  "65px",
+                display:
+                  "flex",
+                alignItems:
+                  "center",
+                justifyContent:
+                  "center",
+                borderRadius:
+                  "50%",
                 background:
                   "rgba(135,58,220,0.14)",
                 border:
                   "1px solid rgba(154,82,255,0.26)",
-                fontSize: "27px",
-                marginBottom: "18px",
+                fontSize:
+                  "27px",
+                marginBottom:
+                  "18px",
               }}
             >
-              {accuracy >= 70
+              {accuracy >=
+              70
                 ? "✓"
                 : "↻"}
             </div>
 
             <h2
               style={{
-                margin: "0 0 18px",
-                fontSize: "20px",
-                color: "#ffffff",
+                margin:
+                  "0 0 18px",
+                fontSize:
+                  "20px",
+                color:
+                  "#ffffff",
               }}
             >
-              {accuracy === 100
+              {accuracy ===
+              100
                 ? "EXCELLENT!"
-                : accuracy >= 70
+                : accuracy >=
+                  70
                 ? "GREAT JOB!"
                 : "GOOD TRY!"}
             </h2>
 
             <div
               style={{
-                width: "250px",
-                padding: "17px",
-                marginBottom: "10px",
-                background: "#171a31",
+                width:
+                  "250px",
+                padding:
+                  "17px",
+                marginBottom:
+                  "10px",
+                background:
+                  "#171a31",
                 border:
                   "1px solid rgba(137,143,176,0.18)",
-                borderRadius: "10px",
+                borderRadius:
+                  "10px",
               }}
             >
               <p
                 style={{
-                  margin: "0 0 6px",
-                  color: "#858ba1",
-                  fontSize: "9px",
-                  letterSpacing: "1px",
+                  margin:
+                    "0 0 6px",
+                  color:
+                    "#858ba1",
+                  fontSize:
+                    "9px",
+                  letterSpacing:
+                    "1px",
                 }}
               >
                 SCORE
@@ -1440,31 +1745,43 @@ function PatternRecall() {
 
               <strong
                 style={{
-                  fontSize: "27px",
-                  color: "#ffffff",
+                  fontSize:
+                    "27px",
+                  color:
+                    "#ffffff",
                 }}
               >
-                {score} / {itemCount}
+                {score} /{" "}
+                {itemCount}
               </strong>
             </div>
 
             <div
               style={{
-                width: "250px",
-                padding: "17px",
-                marginBottom: "10px",
-                background: "#171a31",
+                width:
+                  "250px",
+                padding:
+                  "17px",
+                marginBottom:
+                  "10px",
+                background:
+                  "#171a31",
                 border:
                   "1px solid rgba(137,143,176,0.18)",
-                borderRadius: "10px",
+                borderRadius:
+                  "10px",
               }}
             >
               <p
                 style={{
-                  margin: "0 0 6px",
-                  color: "#858ba1",
-                  fontSize: "9px",
-                  letterSpacing: "1px",
+                  margin:
+                    "0 0 6px",
+                  color:
+                    "#858ba1",
+                  fontSize:
+                    "9px",
+                  letterSpacing:
+                    "1px",
                 }}
               >
                 ACCURACY
@@ -1472,8 +1789,10 @@ function PatternRecall() {
 
               <strong
                 style={{
-                  fontSize: "27px",
-                  color: "#c48aff",
+                  fontSize:
+                    "27px",
+                  color:
+                    "#c48aff",
                 }}
               >
                 {accuracy}%
@@ -1482,21 +1801,30 @@ function PatternRecall() {
 
             <div
               style={{
-                width: "250px",
-                padding: "17px",
-                marginBottom: "10px",
-                background: "#171a31",
+                width:
+                  "250px",
+                padding:
+                  "17px",
+                marginBottom:
+                  "10px",
+                background:
+                  "#171a31",
                 border:
                   "1px solid rgba(137,143,176,0.18)",
-                borderRadius: "10px",
+                borderRadius:
+                  "10px",
               }}
             >
               <p
                 style={{
-                  margin: "0 0 6px",
-                  color: "#858ba1",
-                  fontSize: "9px",
-                  letterSpacing: "1px",
+                  margin:
+                    "0 0 6px",
+                  color:
+                    "#858ba1",
+                  fontSize:
+                    "9px",
+                  letterSpacing:
+                    "1px",
                 }}
               >
                 XP EARNED
@@ -1504,8 +1832,10 @@ function PatternRecall() {
 
               <strong
                 style={{
-                  fontSize: "27px",
-                  color: "#72d8ff",
+                  fontSize:
+                    "27px",
+                  color:
+                    "#72d8ff",
                 }}
               >
                 +{earnedXP} XP
@@ -1514,21 +1844,30 @@ function PatternRecall() {
 
             <div
               style={{
-                width: "250px",
-                padding: "17px",
-                marginBottom: "8px",
-                background: "#171a31",
+                width:
+                  "250px",
+                padding:
+                  "17px",
+                marginBottom:
+                  "8px",
+                background:
+                  "#171a31",
                 border:
                   "1px solid rgba(137,143,176,0.18)",
-                borderRadius: "10px",
+                borderRadius:
+                  "10px",
               }}
             >
               <p
                 style={{
-                  margin: "0 0 6px",
-                  color: "#858ba1",
-                  fontSize: "9px",
-                  letterSpacing: "1px",
+                  margin:
+                    "0 0 6px",
+                  color:
+                    "#858ba1",
+                  fontSize:
+                    "9px",
+                  letterSpacing:
+                    "1px",
                 }}
               >
                 NEXT LEVEL
@@ -1536,8 +1875,10 @@ function PatternRecall() {
 
               <strong
                 style={{
-                  fontSize: "27px",
-                  color: "#c48aff",
+                  fontSize:
+                    "27px",
+                  color:
+                    "#c48aff",
                 }}
               >
                 Level {level}
@@ -1547,41 +1888,63 @@ function PatternRecall() {
             {difficulty && (
               <div
                 style={{
-                  width: "250px",
-                  boxSizing: "border-box",
-                  marginTop: "8px",
-                  padding: "10px",
+                  width:
+                    "250px",
+                  boxSizing:
+                    "border-box",
+                  marginTop:
+                    "8px",
+                  padding:
+                    "10px",
                   border:
                     "1px solid rgba(163,91,255,0.18)",
-                  borderRadius: "9px",
+                  borderRadius:
+                    "9px",
                   background:
                     "rgba(126,48,215,0.06)",
-                  color: "#aaa0c4",
-                  fontSize: "10px",
-                  lineHeight: "1.6",
+                  color:
+                    "#aaa0c4",
+                  fontSize:
+                    "10px",
+                  lineHeight:
+                    "1.6",
                 }}
               >
-                Backend difficulty applied:
+                Difficulty applied:
                 {" "}
-                {difficulty.gridSize}
+                {
+                  difficulty.gridSize
+                }
                 ×
-                {difficulty.gridSize}
+                {
+                  difficulty.gridSize
+                }
                 {" • "}
-                {difficulty.itemCount}
-                {" items"}
+                {
+                  difficulty.itemCount
+                }
+                {" items • "}
+                {
+                  difficulty.timeLimitSeconds
+                }
+                {" seconds"}
               </div>
             )}
 
             <p
               style={{
-                marginTop: "10px",
-                marginBottom: "2px",
-                color: "#bb9af0",
-                fontSize: "11px",
+                marginTop:
+                  "10px",
+                marginBottom:
+                  "2px",
+                color:
+                  "#bb9af0",
+                fontSize:
+                  "11px",
               }}
             >
-              Difficulty adjusted based on
-              your performance.
+              Difficulty adjusted based
+              on your performance.
             </p>
 
             <p style={statusStyle}>
@@ -1590,15 +1953,23 @@ function PatternRecall() {
             </p>
 
             <button
-              style={primaryButtonStyle}
-              onClick={goToDashboard}
+              style={
+                primaryButtonStyle
+              }
+              onClick={
+                goToDashboard
+              }
             >
               VIEW DASHBOARD
             </button>
 
             <button
-              style={secondaryButtonStyle}
-              onClick={playAgain}
+              style={
+                secondaryButtonStyle
+              }
+              onClick={
+                playAgain
+              }
             >
               PLAY AGAIN
             </button>
