@@ -2368,9 +2368,8 @@ function Dashboard() {
 
 
            {/* BACKEND DATA MESSAGE */}
-
 {!dashboardLoading &&
-  playedSessions.length === 0 && (
+  backendPerformance.length === 0 && (
     <div
       style={{
         margin: "12px 0",
