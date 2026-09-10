@@ -583,72 +583,44 @@ function Dashboard() {
      Derived from backend performance.
   ===================================================== */
 
-  const getGameAccuracy =
-    (
-      gameType
-    ) => {
+  const getGameAccuracy = (gameType) => {
+  const records = playedSessions.filter((record) => {
+    const type =
+      record?.gameType ??
+      record?.game_type ??
+      record?.gameName ??
+      record?.game_name;
 
-      const records =
-        backendPerformance.filter(
-          (record) =>
-            record?.gameType ===
-            gameType
-        );
+    const normalizedType = String(type || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[–—-]/g, "_")
+      .replace(/\s+/g, "_");
 
+    return (
+      normalizedType === gameType ||
+      (gameType === "sequencing" &&
+        normalizedType === "sequence_recall")
+    );
+  });
 
-      if (
-        !records.length
-      ) {
+  const values = records
+    .map((record) =>
+      Number(
+        record?.accuracy ??
+        record?.calculatedAccuracy ??
+        record?.calculated_accuracy
+      )
+    )
+    .filter((value) => Number.isFinite(value));
 
-        return 0;
+  if (!values.length) return 0;
 
-      }
-
-
-      const values =
-        records
-          .map(
-            (record) =>
-              Number(
-                record?.accuracy
-              )
-          )
-          .filter(
-            (value) =>
-              !Number.isNaN(
-                value
-              )
-          );
-
-
-      if (
-        !values.length
-      ) {
-
-        return 0;
-
-      }
-
-
-      const average =
-        values.reduce(
-          (
-            total,
-            value
-          ) =>
-            total + value,
-          0
-        ) /
-        values.length;
-
-
-      return Math.round(
-        average
-      );
-
-    };
-
-
+  return Math.round(
+    values.reduce((total, value) => total + value, 0) /
+      values.length
+  );
+};
   /* =====================================================
      GAME INFORMATION
   ===================================================== */
