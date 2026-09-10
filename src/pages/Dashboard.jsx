@@ -1070,8 +1070,7 @@ function Dashboard() {
          PROCESS BACKEND RECORDS
       ----------------------------------------------- */
 
-      backendPerformance.forEach(
-        (record) => {
+     playedSessions.forEach((record) => {
 
           const rawDate =
             record?.createdAt ??
@@ -1298,9 +1297,7 @@ function Dashboard() {
       );
 
 
-    }, [
-      backendPerformance
-    ]);
+   }, [playedSessions]);
 
 
   /* =====================================================
