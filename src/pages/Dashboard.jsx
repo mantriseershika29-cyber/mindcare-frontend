@@ -43,6 +43,22 @@ function Dashboard() {
     backendPerformance,
     setBackendPerformance
   ] = useState([]);
+    const playedSessions =
+    backendPerformance.length > 0
+      ? backendPerformance
+      : (() => {
+          try {
+            const data = JSON.parse(
+              localStorage.getItem("gameHistory") || "[]"
+            );
+
+            return Array.isArray(data)
+              ? data
+              : [];
+          } catch {
+            return [];
+          }
+        })();
 
 
   /* =====================================================
