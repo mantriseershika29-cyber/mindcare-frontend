@@ -2367,44 +2367,25 @@ function Dashboard() {
             </div>
 
 
-            {/* BACKEND DATA MESSAGE */}
+           {/* BACKEND DATA MESSAGE */}
 
-            {!dashboardLoading &&
-              backendPerformance.length === 0 && (
-
-              <div
-                style={{
-                  margin:
-                    "12px 0",
-
-                  padding:
-                    "9px 12px",
-
-                  border:
-                    "1px solid rgba(255,255,255,0.06)",
-
-                  borderRadius:
-                    "8px",
-
-                  background:
-                    "rgba(255,255,255,0.02)",
-
-                  color:
-                    "#777f94",
-
-                  fontSize:
-                    "10px",
-
-                  textAlign:
-                    "center"
-                }}
-              >
-
-                No backend performance data yet.
-
-              </div>
-
-            )}
+{!dashboardLoading &&
+  playedSessions.length === 0 && (
+    <div
+      style={{
+        margin: "12px 0",
+        padding: "9px 12px",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: "8px",
+        background: "rgba(255,255,255,0.02)",
+        color: "#777f94",
+        fontSize: "10px",
+        textAlign: "center",
+      }}
+    >
+      No backend performance data yet.
+    </div>
+  )}
 
 
             {/* CHART */}
