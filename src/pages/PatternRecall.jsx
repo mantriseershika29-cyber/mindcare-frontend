@@ -132,43 +132,43 @@ function PatternRecall() {
      FIXED LEVEL DIFFICULTY
   ===================================================== */
 
-  const getDefaultDifficulty = (currentLevel) => {
-    const defaults = {
-      1: {
-        gridSize: 2,
-        itemCount: 4,
-        timeLimitSeconds: 45,
-        distractorCount: 0,
-      },
+ const getDefaultDifficulty = (currentLevel) => {
+  const defaults = {
+    1: {
+      gridSize: 2,
+      itemCount: 4,
+      timeLimitSeconds: 10,
+      distractorCount: 0,
+    },
 
-      2: {
-        gridSize: 3,
-        itemCount: 6,
-        timeLimitSeconds: 60,
-        distractorCount: 1,
-      },
+    2: {
+      gridSize: 3,
+      itemCount: 6,
+      timeLimitSeconds: 15,
+      distractorCount: 1,
+    },
 
-      3: {
-        gridSize: 4,
-        itemCount: 8,
-        timeLimitSeconds: 75,
-        distractorCount: 2,
-      },
+    3: {
+      gridSize: 4,
+      itemCount: 8,
+      timeLimitSeconds: 30,
+      distractorCount: 2,
+    },
 
-      4: {
-        gridSize: 5,
-        itemCount: 10,
-        timeLimitSeconds: 90,
-        distractorCount: 3,
-      },
-    };
-
-    return (
-      defaults[currentLevel] ||
-      defaults[1]
-    );
+    4: {
+      gridSize: 5,
+      itemCount: 10,
+      timeLimitSeconds: 45,
+      distractorCount: 3,
+    },
   };
 
+  return (
+    defaults[currentLevel] ||
+    defaults[1]
+  );
+};
+    
   /* =====================================================
      GENERATE RANDOM PATTERN
   ===================================================== */
